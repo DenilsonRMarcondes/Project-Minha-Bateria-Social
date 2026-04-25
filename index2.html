@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Bateria Social</title>
+
+<style>
+body {
+    background: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+.broche {
+    background: #1e1e1e;
+    border-radius: 20px;
+    padding: 20px;
+    width: 420px;
+    color: gold;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+}
+
+.titulo {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+/* BARRA */
+.barra {
+    position: relative;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.segmento {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    position: relative;
+}
+
+.red { background: #ff4d4d; }
+.pink { background: #ff7aa2; }
+.yellow { background: #ffd966; }
+.green { background: #6fdc6f; }
+.blue { background: #6fd0ff; }
+
+/* SLIDER */
+.slider {
+    position: relative;
+    height: 12px;
+    background: #ccc;
+    border-radius: 6px;
+}
+
+.raio {
+    position: absolute;
+    top: -18px;
+    left: 0;
+    font-size: 32px;
+    cursor: grab;
+    transition: transform 0.15s ease;
+}
+
+.raio:active {
+    cursor: grabbing;
+    transform: scale(1.2);
+}
+
+/* BALÃO */
+.tooltip {
+    position: absolute;
+    bottom: 55px;
+    left: 0;
+    transform: translateX(-50%) scale(0.8);
+    background: #222;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.2s ease;
+}
+
+/* seta do balão */
+.tooltip::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #222 transparent transparent transparent;
+}
+
+.tooltip.show {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
+/* LEGENDA */
+.legenda {
+    margin-top: 25px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    border-top: 1px solid #444;
+    padding-top: 15px;
+    font-size: 13px;
+    color: #ccc;
+}
+
+.legenda-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="broche">
+    <div class="titulo">MINHA BATERIA SOCIAL</div>
+
+    <div class="barra" id="barra">
+        <div class="segmento red">😞</div>
+        <div class="segmento red">🙁</div>
+        <div class="segmento pink">😕</div>
+        <div class="segmento yellow">😐</div>
+        <div class="segmento green">🙂</div>
+        <div class="segmento blue">😊</div>
+        <div class="segmento blue">😁</div>
+    </div>
+
+    <div class="slider" id="slider">
+        <div class="raio" id="raio">⚡</div>
+        <div class="tooltip" id="tooltip"></div>
+    </div>
+
+    <div class="legenda">
+        <div class="legenda-item"><span>😞</span> Muito esgotado</div>
+        <div class="legenda-item"><span>🙁</span> Esgotado</div>
+        <div class="legenda-item"><span>😕</span> Baixo</div>
+        <div class="legenda-item"><span>😐</span> Neutro</div>
+        <div class="legenda-item"><span>🙂</span> Bem</div>
+        <div class="legenda-item"><span>😊</span> Animado</div>
+        <div class="legenda-item"><span>😁</span> No topo</div>
+    </div>
+</div>
+
+<script>
+const raio = document.getElementById("raio");
+const slider = document.getElementById("slider");
+const tooltip = document.getElementById("tooltip");
+
+const estados = [
+    "Muito esgotado 😞",
+    "Esgotado 🙁",
+    "Baixo 😕",
+    "Neutro 😐",
+    "Bem 🙂",
+    "Animado 😊",
+    "No topo 😁"
+];
+
+let dragging = false;
+
+/* FUNÇÃO PARA ATUALIZAR */
+function atualizar(posX) {
+    const rect = slider.getBoundingClientRect();
+    let x = posX - rect.left;
+
+    if (x < 0) x = 0;
+    if (x > rect.width) x = rect.width;
+
+    raio.style.left = x + "px";
+
+    // calcular índice
+    let index = Math.floor((x / rect.width) * estados.length);
+    if (index >= estados.length) index = estados.length - 1;
+
+    // atualizar tooltip
+    tooltip.innerText = estados[index];
+    tooltip.style.left = x + "px";
+    tooltip.classList.add("show");
+}
+
+/* MOUSE */
+raio.addEventListener("mousedown", () => dragging = true);
+document.addEventListener("mouseup", () => {
+    dragging = false;
+    tooltip.classList.remove("show");
+});
+document.addEventListener("mousemove", (e) => {
+    if (dragging) atualizar(e.clientX);
+});
+
+/* TOUCH (CELULAR) */
+raio.addEventListener("touchstart", () => dragging = true);
+
+document.addEventListener("touchend", () => {
+    dragging = false;
+    tooltip.classList.remove("show");
+});
+
+document.addEventListener("touchmove", (e) => {
+    if (dragging) {
+        atualizar(e.touches[0].clientX);
+    }
+});
+</script>
+
+</body>
+</html>
