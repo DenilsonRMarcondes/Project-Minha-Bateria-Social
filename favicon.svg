@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Gradiente de fundo -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#1a1a2e"/>
+      <stop offset="50%"  stop-color="#0f3460"/>
+      <stop offset="100%" stop-color="#533483"/>
+    </linearGradient>
+
+    <!-- Gradiente do preenchimento da bateria -->
+    <linearGradient id="nivel" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#6fd0ff"/>
+    </linearGradient>
+
+    <!-- Gradiente do reflexo de vidro -->
+    <linearGradient id="glass" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="rgba(255,255,255,0.45)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+
+    <!-- Sombra -->
+    <filter id="sombra">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+
+    <!-- Brilho do raio -->
+    <filter id="brilho">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <clipPath id="clip-bateria">
+      <rect x="4" y="16" width="48" height="28" rx="7"/>
+    </clipPath>
+  </defs>
+
+  <!-- Fundo circular com gradiente -->
+  <circle cx="32" cy="32" r="31" fill="url(#bg)"/>
+  <circle cx="32" cy="32" r="31" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+
+  <!-- Corpo da bateria -->
+  <rect x="4" y="16" width="48" height="28" rx="7"
+        fill="rgba(255,255,255,0.08)"
+        stroke="rgba(255,255,255,0.3)"
+        stroke-width="1.5"
+        filter="url(#sombra)"/>
+
+  <!-- Nível da bateria (75%) -->
+  <rect x="4" y="16" width="36" height="28" rx="7"
+        fill="url(#nivel)"
+        clip-path="url(#clip-bateria)"
+        opacity="0.85"/>
+
+  <!-- Pino positivo -->
+  <rect x="52" y="23" width="6" height="14" rx="2"
+        fill="rgba(255,255,255,0.3)"
+        stroke="rgba(255,255,255,0.25)"
+        stroke-width="1"/>
+
+  <!-- Reflexo de vidro (bolha) -->
+  <rect x="5" y="17" width="46" height="12" rx="6"
+        fill="url(#glass)"
+        opacity="0.6"/>
+
+  <!-- Raio ⚡ centralizado -->
+  <text x="22" y="37"
+        font-size="20"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        filter="url(#brilho)">⚡</text>
+</svg>
