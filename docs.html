@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentação — Minha Bateria Social</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #161b27;
+    --card2: #1c2333;
+    --border: rgba(255,255,255,0.08);
+    --accent: #6fd0ff;
+    --accent2: #a855f7;
+    --accent3: #6fdc6f;
+    --text: #e2e8f0;
+    --muted: #8892a4;
+    --warning: #ffd966;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.7;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 70%, #533483 100%);
+    padding: 80px 24px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(168,85,247,0.25), transparent 70%);
+    top: -150px; left: -150px;
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(111,208,255,0.2), transparent 70%);
+    bottom: -120px; right: -100px;
+    border-radius: 50%;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(111,208,255,0.12);
+    border: 1px solid rgba(111,208,255,0.3);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #fff 30%, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+    z-index: 1;
+  }
+  .hero p {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.6);
+    max-width: 580px;
+    margin: 0 auto 32px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+  .btn-primary-hero {
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity .2s, transform .2s;
+  }
+  .btn-primary-hero:hover { opacity: .88; transform: translateY(-2px); color: #fff; }
+  .btn-ghost {
+    background: rgba(255,255,255,0.07);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background .2s, transform .2s;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.12); transform: translateY(-2px); color: var(--text); }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+  .section { padding: 72px 0; }
+  .section-sm { padding: 48px 0; }
+  .section + .section { border-top: 1px solid var(--border); }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 14px;
+  }
+  .section-desc {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 620px;
+    margin-bottom: 48px;
+  }
+
+  /* ── CARDS DE FEATURE ── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .feature-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    transition: border-color .2s, transform .2s;
+  }
+  .feature-card:hover { border-color: rgba(111,208,255,0.25); transform: translateY(-3px); }
+  .feature-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+  .feature-icon.blue  { background: rgba(111,208,255,0.12); }
+  .feature-icon.purple{ background: rgba(168,85,247,0.12); }
+  .feature-icon.green { background: rgba(111,220,111,0.12); }
+  .feature-icon.yellow{ background: rgba(255,217,102,0.12); }
+  .feature-icon.pink  { background: rgba(255,122,162,0.12); }
+  .feature-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .feature-card p  { font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+
+  /* ── TECH STACK ── */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .tech-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .tech-logo {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .tech-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .tech-card p  { font-size: 12px; color: var(--muted); }
+
+  /* ── ESTADOS ── */
+  .estados-list { display: flex; flex-direction: column; gap: 10px; }
+  .estado-row {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .estado-emoji { font-size: 24px; width: 32px; text-align: center; flex-shrink: 0; }
+  .estado-info { flex: 1; }
+  .estado-info strong { font-size: 14px; display: block; }
+  .estado-info span { font-size: 12px; color: var(--muted); }
+  .estado-bar {
+    height: 6px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .estado-pct { font-size: 13px; font-weight: 700; width: 36px; text-align: right; flex-shrink: 0; }
+
+  /* ── ARQUITETURA / CÓDIGO ── */
+  .code-block {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 13.5px;
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+  .code-block .dir { color: var(--accent); }
+  .code-block .file { color: var(--text); }
+  .code-block .comment { color: var(--muted); }
+
+  .arch-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 640px) { .arch-grid { grid-template-columns: 1fr; } }
+
+  .arch-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+  }
+  .arch-card h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .arch-card ul { list-style: none; padding: 0; }
+  .arch-card li {
+    font-size: 13.5px;
+    color: var(--muted);
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .arch-card li:last-child { border-bottom: none; }
+  .arch-card li i { color: var(--accent); font-size: 13px; flex-shrink: 0; }
+
+  /* ── COMO USAR ── */
+  .steps { display: flex; flex-direction: column; gap: 16px; }
+  .step {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .step p  { font-size: 13.5px; color: var(--muted); }
+
+  /* ── SHOWCASE ── */
+  .showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  .showcase-item {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+  }
+  .showcase-item .icon { font-size: 36px; margin-bottom: 12px; display: block; }
+  .showcase-item h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .showcase-item p  { font-size: 12.5px; color: var(--muted); }
+
+  /* ── FUTURO ── */
+  .future-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+  .future-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+  .future-item i { color: var(--accent2); font-size: 15px; flex-shrink: 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #0a0d14;
+    border-top: 1px solid var(--border);
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13.5px;
+  }
+  footer strong { color: var(--text); }
+  .footer-links { display: flex; gap: 24px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 13px; transition: color .2s; }
+  .footer-links a:hover { color: var(--accent); }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    background: rgba(15, 17, 23, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    padding: 12px 24px;
+  }
+  .nav-inner {
+    max-width: 1060px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .nav-brand {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--accent);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-links { display: flex; gap: 24px; }
+  .nav-links a {
+    font-size: 13.5px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  @media (max-width: 560px) { .nav-links { display: none; } }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+  /* ── TAG PILL ── */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--muted);
+    margin: 3px;
+  }
+
+  /* ── SCROLL SUAVE ── */
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-brand" href="#"><span>⚡</span> Minha Bateria Social</a>
+    <div class="nav-links">
+      <a href="#features">Funcionalidades</a>
+      <a href="#tech">Tecnologias</a>
+      <a href="#arquitetura">Arquitetura</a>
+      <a href="#como-usar">Como usar</a>
+      <a href="#futuro">Roadmap</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Documentação do Projeto</div>
+  <h1>⚡ Minha Bateria Social</h1>
+  <p>Aplicação web interativa para monitorar e registrar o nível de energia social ao longo do tempo, com visual estilo Liquid Glass e diversas funcionalidades de acompanhamento de humor.</p>
+  <div class="hero-actions">
+    <a href="index.html" class="btn-primary-hero" target="_blank">
+      <i class="bi bi-play-fill"></i> Abrir o App
+    </a>
+    <a href="README.md" class="btn-ghost">
+      <i class="bi bi-file-text"></i> README
+    </a>
+  </div>
+</section>
+
+<!-- VISÃO GERAL -->
+<section class="section" id="visao">
+  <div class="container">
+    <div class="section-label">Visão Geral</div>
+    <h2 class="section-title">O que é este projeto?</h2>
+    <p class="section-desc">
+      Uma aplicação front-end completa, sem dependência de servidor, que permite ao usuário expressar como está sua disposição para interações sociais — de "Muito esgotado" até "No topo" — e acompanhar essa evolução ao longo do tempo com gráficos, histórico e personalização.
+    </p>
+
+    <div class="showcase-grid">
+      <div class="showcase-item">
+        <span class="icon">🎨</span>
+        <h4>Visual Liquid Glass</h4>
+        <p>Estética inspirada na identidade Apple com efeitos de vidro fosco, reflexos e transparências.</p>
+      </div>
+      <div class="showcase-item">
+        <span class="icon">📊</span>
+        <h4>Histórico e Gráfico</h4>
+        <p>Registro persistente de estados com filtros, CRUD completo e gráfico de evolução semanal.</p>
+      </div>
+      <div class="showcase-item">
+        <span class="icon">✨</span>
+        <h4>Interatividade Rica</h4>
+        <p>Emojis flutuantes com física de repulsão, drag & drop, confete, animações e tema claro/escuro.</p>
+      </div>
+      <div class="showcase-item">
+        <span class="icon">📱</span>
+        <h4>Responsivo e Acessível</h4>
+        <p>Funciona em desktop e mobile, com suporte a mouse, toque e teclado (setas ← →).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- FUNCIONALIDADES -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-label">Funcionalidades</div>
+    <h2 class="section-title">O que o app faz</h2>
+    <p class="section-desc">Cada funcionalidade foi projetada para tornar a experiência mais intuitiva e visualmente envolvente.</p>
+
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon blue"><i class="bi bi-sliders" style="color:#6fd0ff"></i></div>
+        <h3>Slider Interativo</h3>
+        <p>Arraste o ícone ⚡ para ajustar o estado. Funciona com mouse, toque (mobile) e teclado (← →). Um balão flutuante exibe o estado atual em tempo real.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon purple"><i class="bi bi-battery-half" style="color:#a855f7"></i></div>
+        <h3>Indicador de Bateria (Pilha)</h3>
+        <p>Ícone estilo pilha com efeito glass que enche e esvazia dinamicamente conforme o nível selecionado, com cor e porcentagem correspondentes.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon blue"><i class="bi bi-grid-1x2" style="color:#6fd0ff"></i></div>
+        <h3>Barra de Estados Glass</h3>
+        <p>Sete segmentos coloridos com reflexo de vidro (bolha Liquid Glass) que pulsam com animação CSS ao trocar de estado.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon green"><i class="bi bi-journal-check" style="color:#6fdc6f"></i></div>
+        <h3>Botão Registrar</h3>
+        <p>Salva o estado atual com data e hora no localStorage. O histórico é persistente entre sessões e acumula registros de todos os dias.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon yellow"><i class="bi bi-clock-history" style="color:#ffd966"></i></div>
+        <h3>Histórico com CRUD</h3>
+        <p>Lista completa de registros com ações de <strong>visualizar</strong>, <strong>editar</strong> e <strong>excluir</strong> individualmente, cada uma com modal Liquid Glass dedicado.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon blue"><i class="bi bi-funnel" style="color:#6fd0ff"></i></div>
+        <h3>Filtros de Histórico</h3>
+        <p>Filtre os registros por estado específico ou por data, com botão "Todos" para resetar os filtros rapidamente.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon pink"><i class="bi bi-graph-up" style="color:#ff7aa2"></i></div>
+        <h3>Gráfico Semanal</h3>
+        <p>Linha de evolução dos últimos 7 dias com média diária de energia social, construído com Chart.js com gradiente e tooltip personalizado.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon purple"><i class="bi bi-sun-fill" style="color:#a855f7"></i></div>
+        <h3>Tema Claro / Escuro</h3>
+        <p>Alternância entre tema escuro (padrão) e claro com um clique, preferência salva no localStorage para persistir entre visitas.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon yellow"><i class="bi bi-stars" style="color:#ffd966"></i></div>
+        <h3>Confete ao atingir "No topo"</h3>
+        <p>Efeito visual de confete disparado automaticamente ao registrar o estado máximo de energia, usando a biblioteca canvas-confetti.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon green"><i class="bi bi-badge-wc-fill" style="color:#6fdc6f"></i></div>
+        <h3>Badges de Contagem Diária</h3>
+        <p>Contador de quantas vezes cada estado foi registrado hoje, exibido como badge na legenda para acompanhamento rápido.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon purple"><i class="bi bi-gear-fill" style="color:#a855f7"></i></div>
+        <h3>Personalizar Estados</h3>
+        <p>Modal com abas para editar nome, emoji e mensagem motivacional de cada estado. As alterações são salvas e refletem em toda a interface.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon pink"><i class="bi bi-emoji-smile" style="color:#ff7aa2"></i></div>
+        <h3>Emojis Flutuantes Interativos</h3>
+        <p>Partículas de emoji no fundo com física de repulsão ao passar o mouse e drag & drop — pode arrastar e soltar para "brincar" com eles.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ESTADOS -->
+<section class="section" id="estados">
+  <div class="container">
+    <div class="section-label">Estados</div>
+    <h2 class="section-title">Os 7 níveis de energia social</h2>
+    <p class="section-desc">Cada estado tem emoji, cor e mensagem motivacional próprios — todos editáveis pelo usuário via modal de personalização.</p>
+
+    <div class="estados-list">
+      <div class="estado-row">
+        <div class="estado-emoji">😞</div>
+        <div class="estado-info">
+          <strong>Muito esgotado</strong>
+          <span>"Descanse. Você merece um tempo só seu. 💤"</span>
+        </div>
+        <div class="estado-bar" style="width:80px;background:#ff4d4d;"></div>
+        <div class="estado-pct" style="color:#ff4d4d;">5%</div>
+      </div>
+      <div class="estado-row">
+        <div class="estado-emoji">🙁</div>
+        <div class="estado-info">
+          <strong>Esgotado</strong>
+          <span>"Tudo bem precisar de uma pausa. 🌿"</span>
+        </div>
+        <div class="estado-bar" style="width:80px;background:#ff7aa2;"></div>
+        <div class="estado-pct" style="color:#ff7aa2;">18%</div>
+      </div>
+      <div class="estado-row">
+        <div class="estado-emoji">😕</div>
+        <div class="estado-info">
+          <strong>Baixo</strong>
+          <span>"Vá devagar. Recupere suas energias. 🍵"</span>
+        </div>
+        <div class="estado-bar" style="width:80px;background:#ffd966;"></div>
+        <div class="estado-pct" style="color:#ffd966;">33%</div>
+      </div>
+      <div class="estado-row">
+        <div class="estado-emoji">😐</div>
+        <div class="estado-info">
+          <strong>Neutro</strong>
+          <span>"Equilíbrio é a chave. Siga em frente! ⚖️"</span>
+        </div>
+        <div class="estado-bar" style="width:80px;background:#ffd966;"></div>
+        <div class="estado-pct" style="color:#ffd966;">50%</div>
+      </div>
+      <div class="estado-row">
+        <div class="estado-emoji">🙂</div>
+        <div class="estado-info">
+          <strong>Bem</strong>
+          <span>"Você está indo bem! Continue assim. 🌟"</span>
+        </div>
+        <div class="estado-bar" style="width:80px;background:#6fdc6f;"></div>
+        <div class="estado-pct" style="color:#6fdc6f;">66%</div>
+      </div>
+      <div class="estado-row">
+        <div class="estado-emoji">😊</div>
+        <div class="estado-info">
+          <strong>Animado</strong>
+          <span>"Energia alta! Aproveite esse momento. 🎉"</span>
+        </div>
+        <div class="estado-bar" style="width:80px;background:#6fd0ff;"></div>
+        <div class="estado-pct" style="color:#6fd0ff;">82%</div>
+      </div>
+      <div class="estado-row">
+        <div class="estado-emoji">😁</div>
+        <div class="estado-info">
+          <strong>No topo</strong>
+          <span>"Você está arrasando! No topo! 🚀"</span>
+        </div>
+        <div class="estado-bar" style="width:80px;background:linear-gradient(90deg,#a855f7,#6fd0ff);"></div>
+        <div class="estado-pct" style="color:#6fd0ff;">100%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- TECNOLOGIAS -->
+<section class="section" id="tech">
+  <div class="container">
+    <div class="section-label">Stack Tecnológico</div>
+    <h2 class="section-title">Tecnologias utilizadas</h2>
+    <p class="section-desc">Projeto 100% front-end, sem servidor ou banco de dados externo. Todas as bibliotecas são carregadas via CDN.</p>
+
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="tech-logo" style="background:rgba(255,120,50,0.12);">🌐</div>
+        <div>
+          <h4>HTML5 / CSS3</h4>
+          <p>Estrutura semântica e estilos avançados</p>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-logo" style="background:rgba(255,217,0,0.12);">⚡</div>
+        <div>
+          <h4>JavaScript Vanilla</h4>
+          <p>Toda a lógica sem frameworks</p>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-logo" style="background:rgba(86,61,255,0.12);">🅱️</div>
+        <div>
+          <h4>Bootstrap 5.3.3</h4>
+          <p>Grid, utilitários e layout</p>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-logo" style="background:rgba(86,61,255,0.12);">🔣</div>
+        <div>
+          <h4>Bootstrap Icons 1.11.3</h4>
+          <p>Ícones nos botões e histórico</p>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-logo" style="background:rgba(255,99,132,0.12);">📈</div>
+        <div>
+          <h4>Chart.js 4.4.3</h4>
+          <p>Gráfico de linha semanal</p>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-logo" style="background:rgba(111,220,111,0.12);">🎊</div>
+        <div>
+          <h4>canvas-confetti 1.9.3</h4>
+          <p>Efeito de confete</p>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-logo" style="background:rgba(111,208,255,0.12);">🖼️</div>
+        <div>
+          <h4>Canvas API</h4>
+          <p>Emojis flutuantes com física</p>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-logo" style="background:rgba(168,85,247,0.12);">💾</div>
+        <div>
+          <h4>localStorage</h4>
+          <p>Persistência de dados no navegador</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Técnicas CSS avançadas utilizadas:</p>
+      <div>
+        <span class="pill"><i class="bi bi-circle-fill" style="font-size:8px;color:var(--accent)"></i> backdrop-filter blur/saturate</span>
+        <span class="pill"><i class="bi bi-circle-fill" style="font-size:8px;color:var(--accent)"></i> inset box-shadow</span>
+        <span class="pill"><i class="bi bi-circle-fill" style="font-size:8px;color:var(--accent)"></i> CSS ::after glass bubble</span>
+        <span class="pill"><i class="bi bi-circle-fill" style="font-size:8px;color:var(--accent)"></i> @keyframes pulso</span>
+        <span class="pill"><i class="bi bi-circle-fill" style="font-size:8px;color:var(--accent)"></i> @keyframes entrar</span>
+        <span class="pill"><i class="bi bi-circle-fill" style="font-size:8px;color:var(--accent)"></i> CSS custom properties</span>
+        <span class="pill"><i class="bi bi-circle-fill" style="font-size:8px;color:var(--accent)"></i> linear-gradient / radial-gradient</span>
+        <span class="pill"><i class="bi bi-circle-fill" style="font-size:8px;color:var(--accent)"></i> pointer-events none</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ARQUITETURA -->
+<section class="section" id="arquitetura">
+  <div class="container">
+    <div class="section-label">Arquitetura</div>
+    <h2 class="section-title">Estrutura do projeto</h2>
+    <p class="section-desc">Organizado em três camadas: HTML estrutural, CSS de estilos e JS dividido entre lógica principal e funcionalidades extras.</p>
+
+    <div class="code-block" style="margin-bottom:28px;">
+<span class="dir">Project-Minha-Bateria-Social/</span>
+<span class="file">├── index.html</span>          <span class="comment"># Estrutura HTML + lógica JS principal</span>
+<span class="file">├── favicon.svg</span>         <span class="comment"># Ícone do site (bateria estilo glass)</span>
+<span class="file">├── docs.html</span>           <span class="comment"># Esta documentação</span>
+<span class="file">├── README.md</span>           <span class="comment"># Documentação em Markdown</span>
+<span class="dir">├── style/</span>
+<span class="file">│   └── style.css</span>       <span class="comment"># Todos os estilos (Liquid Glass, animações, temas)</span>
+<span class="dir">└── js/</span>
+<span class="file">    └── extras.js</span>       <span class="comment"># Funcionalidades extras (tema, gráfico, confete, personalização…)</span>
+    </div>
+
+    <div class="arch-grid">
+      <div class="arch-card">
+        <h4><i class="bi bi-file-earmark-code"></i> index.html — JS inline</h4>
+        <ul>
+          <li><i class="bi bi-check2"></i> Variáveis globais: estados, mensagens, cores</li>
+          <li><i class="bi bi-check2"></i> Função atualizar() — posicionamento do slider</li>
+          <li><i class="bi bi-check2"></i> Eventos: mouse, touch, teclado</li>
+          <li><i class="bi bi-check2"></i> CRUD do histórico (localStorage)</li>
+          <li><i class="bi bi-check2"></i> Modais: visualizar, editar, excluir</li>
+          <li><i class="bi bi-check2"></i> Canvas de emojis flutuantes</li>
+          <li><i class="bi bi-check2"></i> Drag & drop dos emojis</li>
+          <li><i class="bi bi-check2"></i> Migração de histórico legado</li>
+        </ul>
+      </div>
+      <div class="arch-card">
+        <h4><i class="bi bi-file-earmark-code"></i> extras.js — funcionalidades adicionais</h4>
+        <ul>
+          <li><i class="bi bi-check2"></i> Tema claro / escuro</li>
+          <li><i class="bi bi-check2"></i> Confete ao atingir "No topo"</li>
+          <li><i class="bi bi-check2"></i> Gráfico semanal (Chart.js)</li>
+          <li><i class="bi bi-check2"></i> Badges de contagem diária</li>
+          <li><i class="bi bi-check2"></i> Filtros de histórico</li>
+          <li><i class="bi bi-check2"></i> Limpar histórico</li>
+          <li><i class="bi bi-check2"></i> Personalizar estados e mensagens</li>
+          <li><i class="bi bi-check2"></i> Hook aoRegistrar() chamado pelo inline</li>
+        </ul>
+      </div>
+      <div class="arch-card">
+        <h4><i class="bi bi-palette"></i> style.css — seções</h4>
+        <ul>
+          <li><i class="bi bi-check2"></i> BASE — body, gradiente de fundo</li>
+          <li><i class="bi bi-check2"></i> FUNDO — canvas, bolhas decorativas</li>
+          <li><i class="bi bi-check2"></i> CARD — efeito Liquid Glass</li>
+          <li><i class="bi bi-check2"></i> BARRA — segmentos + ::after glass</li>
+          <li><i class="bi bi-check2"></i> BATERIA — pilha estilo glass</li>
+          <li><i class="bi bi-check2"></i> HISTÓRICO — layout e CRUD</li>
+          <li><i class="bi bi-check2"></i> TEMA CLARO — overrides</li>
+          <li><i class="bi bi-check2"></i> GRÁFICO / PERSONALIZAR / FILTROS</li>
+        </ul>
+      </div>
+      <div class="arch-card">
+        <h4><i class="bi bi-database"></i> localStorage — chaves</h4>
+        <ul>
+          <li><i class="bi bi-key"></i> bateria_social_historico_v2</li>
+          <li><i class="bi bi-key"></i> bateria_social_semanal</li>
+          <li><i class="bi bi-key"></i> bateria_social_tema</li>
+          <li><i class="bi bi-key"></i> bateria_social_estados</li>
+          <li><i class="bi bi-key"></i> bateria_social_mensagens</li>
+          <li><i class="bi bi-key"></i> bateria_social_historico <span style="color:var(--muted);font-size:11px;">(legado, migrado)</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- COMO USAR -->
+<section class="section" id="como-usar">
+  <div class="container">
+    <div class="section-label">Como usar</div>
+    <h2 class="section-title">Guia rápido de uso</h2>
+    <p class="section-desc">O app foi projetado para ser intuitivo desde o primeiro acesso, sem necessidade de cadastro ou configuração.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h4>Abra o app</h4>
+          <p>Abra o arquivo <code>index.html</code> em qualquer navegador moderno. Não precisa de servidor ou instalação — funciona diretamente.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h4>Selecione seu estado</h4>
+          <p>Arraste o ⚡ pela barra colorida, clique num segmento ou use as setas do teclado. O balão flutuante mostra o estado em tempo real.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h4>Registre o momento</h4>
+          <p>Clique em <strong>⚡ Registrar agora</strong>. O estado é salvo com data e hora e aparece imediatamente no histórico abaixo.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <h4>Acompanhe sua evolução</h4>
+          <p>Veja o gráfico semanal ao final da página com a média diária dos últimos 7 dias. Filtre o histórico por estado ou data conforme precisar.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div>
+          <h4>Personalize (opcional)</h4>
+          <p>Clique em <strong>⚙️ Personalizar</strong> para editar o nome, emoji e mensagem motivacional de cada estado de acordo com sua preferência.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:32px;">
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:16px;">Como executar localmente</h3>
+      <div class="code-block">
+<span class="comment"># Opção 1 — Abertura direta (mais simples)</span>
+<span class="file">Clique duplo em index.html → abre no navegador padrão</span>
+
+<span class="comment"># Opção 2 — XAMPP ou qualquer servidor estático</span>
+<span class="file">Copie a pasta para htdocs/</span>
+<span class="file">Acesse: http://localhost/Project-Minha-Bateria-Social/</span>
+
+<span class="comment"># Opção 3 — VS Code + Live Server</span>
+<span class="file">Abra a pasta no VS Code</span>
+<span class="file">Clique em "Go Live" na barra inferior</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ROADMAP -->
+<section class="section" id="futuro">
+  <div class="container">
+    <div class="section-label">Roadmap</div>
+    <h2 class="section-title">Possibilidades de evolução</h2>
+    <p class="section-desc">Funcionalidades que podem ser implementadas em versões futuras do projeto.</p>
+
+    <div class="future-list">
+      <div class="future-item"><i class="bi bi-phone"></i> PWA — instalar no celular como app nativo</div>
+      <div class="future-item"><i class="bi bi-bell"></i> Notificações de lembrete diário</div>
+      <div class="future-item"><i class="bi bi-cloud-upload"></i> Sincronização via backend (Node/PHP)</div>
+      <div class="future-item"><i class="bi bi-database"></i> Banco de dados SQLite via PHP</div>
+      <div class="future-item"><i class="bi bi-download"></i> Exportar histórico em CSV ou PDF</div>
+      <div class="future-item"><i class="bi bi-share"></i> Compartilhar estado via link ou imagem</div>
+      <div class="future-item"><i class="bi bi-people"></i> Modo multiusuário com login</div>
+      <div class="future-item"><i class="bi bi-bar-chart"></i> Análise de padrões e insights semanais</div>
+      <div class="future-item"><i class="bi bi-palette2"></i> Temas de cores personalizáveis</div>
+      <div class="future-item"><i class="bi bi-globe2"></i> Internacionalização (i18n) PT/EN/ES</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SOBRE -->
+<section class="section-sm" id="sobre">
+  <div class="container" style="text-align:center;">
+    <div class="section-label" style="margin-bottom:12px;">Sobre</div>
+    <h2 class="section-title" style="margin-bottom:12px;">Projeto de portfólio</h2>
+    <p style="color:var(--muted);max-width:520px;margin:0 auto 24px;font-size:14px;">
+      Este projeto demonstra habilidades em desenvolvimento front-end moderno: design visual avançado, interatividade com JavaScript puro, manipulação de DOM, persistência de dados, integração com bibliotecas externas e código organizado e manutenível.
+    </p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <span class="pill">Front-end</span>
+      <span class="pill">JavaScript Vanilla</span>
+      <span class="pill">CSS Avançado</span>
+      <span class="pill">UX / UI</span>
+      <span class="pill">localStorage</span>
+      <span class="pill">Chart.js</span>
+      <span class="pill">Canvas API</span>
+      <span class="pill">Design System</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>⚡ Minha Bateria Social</strong> — Documentação do projeto
+  <div class="footer-links">
+    <a href="index.html">Abrir o App</a>
+    <a href="README.md">README.md</a>
+    <a href="#features">Funcionalidades</a>
+    <a href="#tech">Tecnologias</a>
+    <a href="#arquitetura">Arquitetura</a>
+  </div>
+  <p style="margin-top:16px;font-size:12px;">Feito com ⚡ e muito CSS</p>
+</footer>
+
+</body>
+</html>
