@@ -9,18 +9,53 @@
 
 <style>
 body {
-    background: #eee; /* Mantém o fundo personalizado */
-    /* Teste de um commit usando o linux As propriedades de flexbox e altura serão gerenciadas pelo Bootstrap no body tag */
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 70%, #533483 100%);
     font-family: Arial, sans-serif;
+    min-height: 100vh;
+}
+
+/* Bolhas decorativas no fundo */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+}
+
+body::before {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, #a855f7, transparent);
+    top: -100px;
+    left: -100px;
+}
+
+body::after {
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, #3b82f6, transparent);
+    bottom: -80px;
+    right: -80px;
 }
 
 .broche {
-    /* background: #1e1e1e; */ /* Substituído por bg-dark */
-    /* border-radius: 20px; */ /* Substituído por rounded-4 */
-    /* padding: 20px; */ /* Substituído por p-4 */
     width: 420px;
-    /* color: gold; */ /* Substituído por text-warning */
-    /* box-shadow: 0 5px 20px rgba(0,0,0,0.4); */ /* Substituído por shadow-lg */
+    position: relative;
+    z-index: 1;
+    /* Liquid Glass */
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+    transition: background-color 0.5s ease;
 }
 
 .titulo {
@@ -37,6 +72,7 @@ body {
     display: flex;
     overflow: hidden;
     margin-bottom: 20px;
+    cursor: pointer;
 }
 
 .segmento {
@@ -58,8 +94,9 @@ body {
 .slider {
     position: relative;
     height: 12px;
-    background: #ccc;
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .raio {
@@ -69,6 +106,7 @@ body {
     font-size: 32px;
     cursor: grab;
     transition: transform 0.15s ease;
+    outline: none;
 }
 
 .raio:active {
@@ -77,48 +115,140 @@ body {
 }
 
 /* BALÃO */
-.tooltip {
+.balao {
     position: absolute;
-    bottom: 55px; /* Mantém a posição personalizada */
+    bottom: 55px;
     left: 0;
     transform: translateX(-50%) scale(0.8);
-    /* background: #222; */ /* Substituído por bg-dark */
-    /* color: #fff; */ /* Substituído por text-white */
-    /* padding: 8px 12px; */ /* Substituído por p-2 */
-    /* border-radius: 10px; */ /* Substituído por rounded */
     font-size: 13px;
     opacity: 0;
     pointer-events: none;
     transition: 0.2s ease;
+    white-space: nowrap;
+    background: rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 /* seta do balão */
-.tooltip::after {
+.balao::after {
     content: "";
     position: absolute;
     bottom: -6px;
     left: 50%;
-    transform: translateX(-50%); /* Mantém a transformação personalizada */
+    transform: translateX(-50%);
     border-width: 6px;
     border-style: solid;
-    border-color: #222 transparent transparent transparent;
+    border-color: rgba(255,255,255,0.12) transparent transparent transparent;
 }
 
-.tooltip.show {
+.balao.show {
     opacity: 1;
     transform: translateX(-50%) scale(1);
 }
 
+/* MENSAGEM MOTIVACIONAL */
+.mensagem {
+    text-align: center;
+    font-size: 13px;
+    font-style: italic;
+    min-height: 20px;
+    transition: opacity 0.3s ease;
+    opacity: 0.85;
+}
+
+/* BATERIA (estilo pilha) */
+.bateria-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 16px 0 4px;
+}
+
+.bateria-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+/* Pino positivo (à direita — frente da pilha) */
+.bateria-pino {
+    width: 8px;
+    height: 18px;
+    border-radius: 0 3px 3px 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.35) 0%,
+        rgba(255,255,255,0.12) 50%,
+        rgba(255,255,255,0.25) 100%
+    );
+    border: 1px solid rgba(255,255,255,0.25);
+    border-left: none;
+    box-shadow: 2px 0 6px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+}
+
+/* Corpo da pilha */
+.bateria {
+    position: relative;
+    width: 110px;
+    height: 38px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow:
+        0 4px 20px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.3),
+        inset 0 -1px 0 rgba(0,0,0,0.2);
+    overflow: hidden;
+}
+
+/* Reflexo de vidro no topo do corpo */
+.bateria::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 8px;
+    right: 8px;
+    height: 40%;
+    border-radius: 12px 12px 50% 50%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.18), transparent);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.bateria-nivel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+    transition: width 0.6s cubic-bezier(.4,0,.2,1), background-color 0.5s ease;
+    background: linear-gradient(to right, rgba(255,255,255,0.15), currentColor);
+    box-shadow: 0 0 14px 2px currentColor;
+    opacity: 0.85;
+}
+
+.bateria-porcentagem {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: rgba(255,255,255,0.75);
+    min-width: 40px;
+    transition: color 0.5s ease;
+    text-shadow: 0 0 10px currentColor;
+}
+
 /* LEGENDA */
 .legenda {
-    margin-top: 25px;
-    /* display: grid; */ /* Substituído por row */
-    /* grid-template-columns: repeat(2, 1fr); */ /* Substituído por col-6 */
-    /* gap: 10px; */ /* Substituído por g-2 */
-    /* border-top: 1px solid #444; */ /* Substituído por border-top border-secondary */
-    /* padding-top: 15px; */ /* Substituído por pt-3 */
     font-size: 13px;
-    color: #ccc; /* Mantém a cor personalizada ou pode ser text-light */
+    color: rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
 .legenda-item {
@@ -126,12 +256,17 @@ body {
     align-items: center;
     gap: 8px;
 }
+
+.legenda-item.ativo {
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.95);
+}
 </style>
 </head>
 
 <body class="d-flex justify-content-center align-items-center min-vh-100">
 
-<div class="broche bg-dark rounded-4 p-4 shadow-lg" style="width: 420px;">
+<div class="broche rounded-4 p-4" id="broche" tabindex="0">
     <div class="titulo text-center fs-5 mb-3 text-warning">MINHA BATERIA SOCIAL</div>
 
     <div class="barra" id="barra">
@@ -144,28 +279,46 @@ body {
         <div class="segmento blue">😁</div>
     </div>
 
-    <div class="slider bg-secondary rounded-pill" id="slider">
-        <div class="raio" id="raio">⚡</div>
-        <div class="tooltip bg-dark text-white p-2 rounded" id="tooltip"></div>
+    <div class="slider rounded-pill" id="slider">
+        <div class="raio" id="raio" tabindex="0">⚡</div>
+        <div class="balao text-white p-2 rounded" id="balao"></div>
     </div>
 
-    <div class="legenda row g-2 pt-3 border-top border-secondary text-light">
-        <div class="legenda-item col-6 gap-2"><span>😞</span> Muito esgotado</div>
-        <div class="legenda-item col-6 gap-2"><span>🙁</span> Esgotado</div>
-        <div class="legenda-item col-6 gap-2"><span>😕</span> Baixo</div>
-        <div class="legenda-item col-6 gap-2"><span>😐</span> Neutro</div>
-        <div class="legenda-item col-6 gap-2"><span>🙂</span> Bem</div>
-        <div class="legenda-item col-6 gap-2"><span>😊</span> Animado</div>
-        <div class="legenda-item col-6 gap-2"><span>😁</span> No topo</div>
+    <div class="bateria-container">
+        <div class="bateria-wrapper">
+            <div class="bateria">
+                <div class="bateria-nivel" id="bateria-nivel"></div>
+            </div>
+            <div class="bateria-pino"></div>
+        </div>
+        <span class="bateria-porcentagem" id="bateria-porcentagem">50%</span>
+    </div>
+
+    <div class="mensagem text-secondary mt-3" id="mensagem"></div>
+
+    <div class="legenda row g-2 pt-3 border-top mt-2">
+        <div class="legenda-item col-6"><span>😞</span> Muito esgotado</div>
+        <div class="legenda-item col-6"><span>🙁</span> Esgotado</div>
+        <div class="legenda-item col-6"><span>😕</span> Baixo</div>
+        <div class="legenda-item col-6"><span>😐</span> Neutro</div>
+        <div class="legenda-item col-6"><span>🙂</span> Bem</div>
+        <div class="legenda-item col-6"><span>😊</span> Animado</div>
+        <div class="legenda-item col-6"><span>😁</span> No topo</div>
     </div>
 </div>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script>
-const raio = document.getElementById("raio");
-const slider = document.getElementById("slider");
-const tooltip = document.getElementById("tooltip");
+const raio    = document.getElementById("raio");
+const slider  = document.getElementById("slider");
+const balao   = document.getElementById("balao");
+const broche  = document.getElementById("broche");
+const barra   = document.getElementById("barra");
+const mensagemEl        = document.getElementById("mensagem");
+const bateriaNivel      = document.getElementById("bateria-nivel");
+const bateriaPorcentagem = document.getElementById("bateria-porcentagem");
+const legendaItens = document.querySelectorAll(".legenda-item");
 
 const estados = [
     "Muito esgotado 😞",
@@ -177,10 +330,36 @@ const estados = [
     "No topo 😁"
 ];
 
+const mensagens = [
+    "Descanse. Você merece um tempo só seu. 💤",
+    "Tudo bem precisar de uma pausa. 🌿",
+    "Vá devagar. Recupere suas energias. 🍵",
+    "Equilíbrio é a chave. Siga em frente! ⚖️",
+    "Você está indo bem! Continue assim. 🌟",
+    "Energia alta! Aproveite esse momento. 🎉",
+    "Você está arrasando! No topo! 🚀"
+];
+
+/* Porcentagens e cores da bateria por índice */
+const bateriaPercents = [5, 18, 33, 50, 66, 82, 100];
+const bateriaCores    = ["#ff4d4d", "#ff7aa2", "#ffd966", "#ffd966", "#6fdc6f", "#6fd0ff", "#6fd0ff"];
+
+/* Cores de fundo do card por índice (do mais esgotado ao mais energizado) */
+const cores = [
+    "#3b1a1a",
+    "#3b2230",
+    "#3b3520",
+    "#1e3020",
+    "#1a2b3b",
+    "#1a253b",
+    "#1a1a3b"
+];
+
 let dragging = false;
+let indiceAtual = 0;
 
 /* FUNÇÃO PARA ATUALIZAR */
-function atualizar(posX) {
+function atualizar(posX, mostrarBalao = true) {
     const rect = slider.getBoundingClientRect();
     let x = posX - rect.left;
 
@@ -189,38 +368,86 @@ function atualizar(posX) {
 
     raio.style.left = x + "px";
 
-    // calcular índice
-    let index = Math.floor((x / rect.width) * estados.length);
-    if (index >= estados.length) index = estados.length - 1;
+    const index = Math.min(
+        Math.floor((x / rect.width) * estados.length),
+        estados.length - 1
+    );
 
-    // atualizar tooltip
-    tooltip.innerText = estados[index];
-    tooltip.style.left = x + "px";
-    tooltip.classList.add("show");
+    if (index !== indiceAtual) {
+        indiceAtual = index;
+
+        // mensagem motivacional
+        mensagemEl.textContent = mensagens[index];
+
+        // bateria
+        bateriaNivel.style.width = bateriaPercents[index] + "%";
+        bateriaNivel.style.backgroundColor = bateriaCores[index];
+        bateriaPorcentagem.textContent = bateriaPercents[index] + "%";
+        bateriaPorcentagem.style.color = bateriaCores[index];
+
+        // destaque na legenda
+        legendaItens.forEach((el, i) => el.classList.toggle("ativo", i === index));
+    }
+
+    balao.textContent = estados[index];
+    balao.style.left = x + "px";
+    if (mostrarBalao) balao.classList.add("show");
 }
 
 /* MOUSE */
 raio.addEventListener("mousedown", () => dragging = true);
+
 document.addEventListener("mouseup", () => {
     dragging = false;
-    tooltip.classList.remove("show");
+    balao.classList.remove("show");
 });
+
 document.addEventListener("mousemove", (e) => {
     if (dragging) atualizar(e.clientX);
 });
 
+/* CLIQUE DIRETO NA BARRA */
+barra.addEventListener("click", (e) => {
+    const barraRect = barra.getBoundingClientRect();
+    const sliderRect = slider.getBoundingClientRect();
+    const proporcao = (e.clientX - barraRect.left) / barraRect.width;
+    const x = sliderRect.left + proporcao * sliderRect.width;
+    atualizar(x, false);
+    mensagemEl.textContent = mensagens[indiceAtual];
+});
+
+/* TECLADO (setas ← →) */
+raio.addEventListener("keydown", (e) => {
+    const rect = slider.getBoundingClientRect();
+    const passo = rect.width / (estados.length - 1);
+    const atualX = parseFloat(raio.style.left) || 0;
+
+    if (e.key === "ArrowRight") {
+        atualizar(slider.getBoundingClientRect().left + Math.min(atualX + passo, rect.width), false);
+        e.preventDefault();
+    } else if (e.key === "ArrowLeft") {
+        atualizar(slider.getBoundingClientRect().left + Math.max(atualX - passo, 0), false);
+        e.preventDefault();
+    }
+});
+
 /* TOUCH (CELULAR) */
-raio.addEventListener("touchstart", () => dragging = true);
+raio.addEventListener("touchstart", () => dragging = true, { passive: true });
 
 document.addEventListener("touchend", () => {
     dragging = false;
-    tooltip.classList.remove("show");
+    balao.classList.remove("show");
 });
 
 document.addEventListener("touchmove", (e) => {
-    if (dragging) {
-        atualizar(e.touches[0].clientX);
-    }
+    if (dragging) atualizar(e.touches[0].clientX);
+}, { passive: true });
+
+/* INICIALIZAR no centro (Neutro) */
+window.addEventListener("load", () => {
+    const rect = slider.getBoundingClientRect();
+    const centroX = rect.left + rect.width / 2;
+    atualizar(centroX, false);
 });
 </script>
 
