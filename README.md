@@ -1,53 +1,79 @@
 # ⚡ Minha Bateria Social
 
-Um projeto web interativo e visualmente intuitivo desenvolvido para medir e demonstrar o nível da sua "bateria social" no momento. Através de uma interface amigável baseada em emojis e uma paleta de cores indicativa, o usuário pode arrastar um controle deslizante (slider) para comunicar como está sua disposição para interações sociais.
+Um projeto web interativo e visualmente intuitivo para medir e registrar o nível da sua "bateria social". Com interface estilo **Liquid Glass** inspirada na Apple, emojis flutuantes animados e diversas funcionalidades de acompanhamento de humor, o usuário pode arrastar um slider para comunicar sua disposição social — e acompanhar a evolução ao longo da semana.
 
 ## 🚀 Funcionalidades
 
-* **Slider Interativo:** Arraste o ícone de raio (⚡) livremente pela barra para ajustar o seu nível atual de energia social.
-* **Feedback Visual e Tooltip:** Um balão flutuante (tooltip) acompanha de forma suave o movimento do slider, exibindo de imediato o status atual em formato de texto e emoji.
-* **Paleta de Cores e Emojis:** A barra é dividida em segmentos de cores (do vermelho de esgotamento ao azul de muita animação) que refletem com exatidão o estado de humor.
-* **Suporte Multiplataforma:** O sistema de arraste foi programado para funcionar perfeitamente com cliques de mouse em computadores (`mousedown`, `mousemove`, `mouseup`) e toques em telas de smartphones/tablets (`touchstart`, `touchmove`, `touchend`).
-* **Design Responsivo e Moderno:** Layout centralizado, utilizando cantos arredondados, sombras dinâmicas e classes utilitárias do Bootstrap 5.
+* **Slider Interativo:** Arraste o ícone ⚡ pela barra para ajustar o nível de energia social. Suporta mouse, toque (mobile) e teclado (← →).
+* **Barra de Estados com Efeito Glass:** Segmentos coloridos com reflexo de vidro (bolha Liquid Glass) que pulsam ao trocar de estado.
+* **Balão Flutuante:** Exibe o estado atual enquanto o slider é arrastado.
+* **Indicador de Bateria (Pilha):** Ícone estilo pilha que enche e esvazia conforme o nível, com cor e porcentagem dinâmicas.
+* **Mensagens Motivacionais:** Frase personalizada para cada estado de energia.
+* **Emojis Flutuantes no Fundo:** Partículas de emoji animadas com física de repulsão ao passar o mouse e drag & drop interativo.
+* **Botão Registrar:** Salva o estado atual com data e hora no histórico persistente (localStorage).
+* **Histórico Completo com CRUD:** Visualizar, editar e excluir registros individualmente, com modais Liquid Glass de confirmação.
+* **Filtrar Histórico:** Filtre registros por estado ou por data.
+* **Limpar Histórico:** Apaga todos os registros com confirmação via modal.
+* **Gráfico Semanal:** Linha de evolução dos últimos 7 dias com média diária por estado (Chart.js).
+* **Tema Claro / Escuro:** Alternância de tema salva no localStorage.
+* **Confete ao atingir "No topo":** Efeito de confete ao registrar o estado máximo (canvas-confetti).
+* **Badges de Contagem:** Contador de registros do dia por estado na legenda.
+* **Personalizar Estados e Mensagens:** Modal para editar nome, emoji e mensagem motivacional de cada estado.
+* **Animação de Entrada:** Card animado ao carregar a página.
+* **Favicon SVG:** Ícone personalizado estilo bateria com efeito glass.
+* **Responsivo:** Funciona em desktop e mobile.
 
 ## 🛠️ Tecnologias Utilizadas
 
-* **HTML5:** Estruturação semântica do componente.
-* **CSS3:** Estilização personalizada, animações de transição suaves, controle de flexbox e posicionamento do balão flutuante.
-* **JavaScript (Vanilla):** Toda a lógica de cálculo de posicionamento do slider, mapeamento matemático dos estados baseados na largura do componente e gerenciamento de eventos do usuário.
-* **Bootstrap 5.3.3:** Framework CSS utilizado principalmente em classes utilitárias de contêiner e tipografia (ex: `d-flex`, `bg-dark`, `rounded-4`, `shadow-lg`) para acelerar e padronizar o layout.
+* **HTML5 / CSS3 / JavaScript (Vanilla)**
+* **Bootstrap 5.3.3** — layout, utilitários e grid
+* **Bootstrap Icons 1.11.3** — ícones nos botões e histórico
+* **Chart.js 4.4.3** — gráfico de linha semanal
+* **canvas-confetti 1.9.3** — efeito de confete
+* **localStorage** — persistência de histórico, tema, estados e mensagens personalizados
+* **CSS Liquid Glass** — `backdrop-filter`, transparências, inset box-shadows e pseudo-elementos para reflexo de vidro
+* **Canvas API** — emojis flutuantes com física e interação de mouse
 
 ## 📊 Estados da Bateria Social
 
-O medidor está programado para refletir 7 níveis diferentes de energia:
+O medidor reflete 7 níveis de energia (personalizáveis):
 
-1. **Muito esgotado** 😞 (Vermelho - `#ff4d4d`)
-2. **Esgotado** 🙁 (Vermelho - `#ff4d4d`)
-3. **Baixo** 😕 (Rosa - `#ff7aa2`)
-4. **Neutro** 😐 (Amarelo - `#ffd966`)
-5. **Bem** 🙂 (Verde - `#6fdc6f`)
-6. **Animado** 😊 (Azul - `#6fd0ff`)
-7. **No topo** 😁 (Azul - `#6fd0ff`)
+| # | Estado | Emoji | Cor |
+|---|--------|-------|-----|
+| 1 | Muito esgotado | 😞 | Vermelho `#ff4d4d` |
+| 2 | Esgotado | 🙁 | Rosa `#ff7aa2` |
+| 3 | Baixo | 😕 | Amarelo `#ffd966` |
+| 4 | Neutro | 😐 | Amarelo `#ffd966` |
+| 5 | Bem | 🙂 | Verde `#6fdc6f` |
+| 6 | Animado | 😊 | Azul `#6fd0ff` |
+| 7 | No topo | 😁 | Azul `#6fd0ff` |
 
 ## ⚙️ Como Executar o Projeto
 
-Como se trata de uma aplicação client-side simples (Front-end), você não precisa de um ambiente complexo para visualizar.
+**Opção 1: Abertura direta**
+1. Abra o arquivo `index.html` diretamente em qualquer navegador moderno (Chrome, Edge, Firefox, Safari).
 
-**Opção 1: Uso Direto (Mais simples)**
-1. Baixe os arquivos do projeto.
-2. Abra o arquivo `index.html` em qualquer navegador web moderno (Chrome, Edge, Firefox, Safari).
+> Não requer servidor back-end nem instalação de dependências. Todas as bibliotecas são carregadas via CDN.
 
-## 💡 Estrutura do Código
+## 💡 Estrutura do Projeto
 
 ```text
 Project-Minha-Bateria-Social/
-├── index.html       # Arquivo único contendo Estrutura (HTML), Estilos (CSS) e Lógica (JS)
-└── README.md        # Documentação do projeto (este arquivo)
+├── index.html          # Estrutura HTML e lógica JS principal (inline)
+├── favicon.svg         # Ícone do site (bateria estilo glass)
+├── style/
+│   └── style.css       # Todos os estilos (Liquid Glass, animações, temas)
+├── js/
+│   └── extras.js       # Funcionalidades extras: tema, gráfico, confete,
+│                       # personalização, filtros, badges, limpar histórico
+└── README.md           # Documentação do projeto (este arquivo)
 ```
 
-## 🎨 Customização e Expansão
+## 🎨 Personalização
 
-Se desejar alterar os textos, emojis ou adicionar mais passos de bateria, basta modificar o array `estados` dentro das tags `<script>` no final do `index.html`. Não se esqueça de adicionar a respectiva `<div class="segmento">` e a configuração de cor no CSS!
+Acesse o botão **⚙️ Personalizar** dentro do app para editar nome, emoji e mensagem motivacional de cada estado diretamente pela interface. As alterações são salvas automaticamente no `localStorage`.
+
+Para customizações avançadas no código, edite os arrays `estadosDefault` e `mensagensDefault` em `index.html`, ou os estilos em `style/style.css`.
 
 ---
 *Feito com ⚡ para comunicar de forma divertida quando precisamos daquela pausa social!*
