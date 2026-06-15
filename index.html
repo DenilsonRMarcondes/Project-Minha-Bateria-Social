@@ -202,6 +202,14 @@ function atualizar(posX, mostrarBalao = true) {
     if (mostrarBalao) balao.classList.add("show");
 }
 
+// chamada pelo clique nos emojis do fundo
+function definirEstadoPorIndice(index) {
+    const rect   = slider.getBoundingClientRect();
+    const passo  = rect.width / (estados.length - 1);
+    const x      = rect.left + passo * index;
+    atualizar(x, false);
+}
+
 /* MOUSE */
 raio.addEventListener("mousedown", () => dragging = true);
 
@@ -429,9 +437,23 @@ modalSalvar.addEventListener("click", () => {
     const ctx    = canvas.getContext("2d");
 
     const EMOJIS = ["😞","🙁","😕","😐","🙂","😊","😁","⚡"];
+
+    // mapa emoji → índice de estado (⚡ não tem estado fixo)
+    const EMOJI_ESTADO = { "😞":0, "🙁":1, "😕":2, "😐":3, "🙂":4, "😊":5, "😁":6 };
+
     let particulas = [];
-    const mouse = { x: -9999, y: -9999 };
-    const RAIO_REPULSAO = 120;
+
+    const mouse      = { x: -9999, y: -9999 };
+    let   arrastando = null;
+    let   offsetX    = 0;
+    let   offsetY    = 0;
+    let   mouseAnteriorX  = 0;
+    let   mouseAnteriorY  = 0;
+    let   clicouX         = 0;   // posição do mousedown para detectar clique
+    let   clicouY         = 0;
+    let   particuleClicada = null;
+
+    const RAIO_REPULSAO  = 120;
     const FORCA_REPULSAO = 3.5;
     const AMORTECIMENTO  = 0.92;
 
@@ -457,7 +479,14 @@ modalSalvar.addEventListener("click", () => {
             alfaMax:  0.18,
             rotacao:  (Math.random() - 0.5) * 0.3,
             drotacao: (Math.random() - 0.5) * 0.003,
+            preso:    false,
         };
+    }
+
+    // verifica se um ponto (px, py) está dentro do emoji
+    function acertou(p, px, py) {
+        const margem = p.tamanho * 0.8;
+        return Math.abs(px - p.x) < margem && Math.abs(py - p.y) < margem;
     }
 
     function iniciar() {
@@ -471,58 +500,172 @@ modalSalvar.addEventListener("click", () => {
         for (let i = 0; i < particulas.length; i++) {
             const p = particulas[i];
 
-            // repulsão pelo mouse
-            const dx   = p.x - mouse.x;
-            const dy   = p.y - mouse.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist < RAIO_REPULSAO && dist > 0) {
-                const forca = (RAIO_REPULSAO - dist) / RAIO_REPULSAO * FORCA_REPULSAO;
-                p.vx += (dx / dist) * forca;
-                p.vy += (dy / dist) * forca;
-                p.alfa = Math.min(p.alfaMax * 2.2, p.alfa + 0.04); // ilumina ao ser empurrado
+            if (p.preso) {
+                // segue o mouse com offset do clique
+                p.x = mouse.x + offsetX;
+                p.y = mouse.y + offsetY;
+                // acumula velocidade para lançar ao soltar
+                p.vx = mouse.x - mouseAnteriorX;
+                p.vy = mouse.y - mouseAnteriorY;
+                p.alfa = Math.min(0.9, p.alfa + 0.06);
+                p.rotacao += 0.04;
             } else {
-                // retorna suavemente à velocidade base
-                p.vx = p.vx * AMORTECIMENTO + p.vxBase * (1 - AMORTECIMENTO);
-                p.vy = p.vy * AMORTECIMENTO + p.vyBase * (1 - AMORTECIMENTO);
-                p.alfa += p.dalfa;
+                // repulsão pelo mouse (apenas quando não está arrastando nada)
+                if (!arrastando) {
+                    const dx   = p.x - mouse.x;
+                    const dy   = p.y - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < RAIO_REPULSAO && dist > 0) {
+                        const forca = (RAIO_REPULSAO - dist) / RAIO_REPULSAO * FORCA_REPULSAO;
+                        p.vx += (dx / dist) * forca;
+                        p.vy += (dy / dist) * forca;
+                        p.alfa = Math.min(p.alfaMax * 2.2, p.alfa + 0.04);
+                    } else {
+                        p.vx = p.vx * AMORTECIMENTO + p.vxBase * (1 - AMORTECIMENTO);
+                        p.vy = p.vy * AMORTECIMENTO + p.vyBase * (1 - AMORTECIMENTO);
+                        p.alfa += p.dalfa;
+                    }
+                } else {
+                    p.vx = p.vx * AMORTECIMENTO + p.vxBase * (1 - AMORTECIMENTO);
+                    p.vy = p.vy * AMORTECIMENTO + p.vyBase * (1 - AMORTECIMENTO);
+                    p.alfa += p.dalfa;
+                }
+
+                const vel = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+                if (vel > 6) { p.vx = (p.vx / vel) * 6; p.vy = (p.vy / vel) * 6; }
+
+                if (p.alfa <= p.alfaMin || p.alfa >= p.alfaMax) p.dalfa *= -1;
+                p.alfa = Math.max(p.alfaMin, Math.min(p.alfaMax * 2.5, p.alfa));
+
+                p.x       += p.vx;
+                p.y       += p.vy;
+                p.rotacao += p.drotacao + (p.vx * 0.01);
+
+                if (p.y < -p.tamanho * 2) {
+                    particulas[i] = criarParticula(canvas.height + p.tamanho);
+                    continue;
+                }
+                if (p.x < -60) p.x = canvas.width + 60;
+                if (p.x > canvas.width + 60) p.x = -60;
             }
-
-            // limita velocidade máxima
-            const vel = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-            if (vel > 6) { p.vx = (p.vx / vel) * 6; p.vy = (p.vy / vel) * 6; }
-
-            if (p.alfa <= p.alfaMin || p.alfa >= p.alfaMax) p.dalfa *= -1;
-            p.alfa = Math.max(p.alfaMin, Math.min(p.alfaMax * 2.5, p.alfa));
-
-            p.x       += p.vx;
-            p.y       += p.vy;
-            p.rotacao += p.drotacao + (p.vx * 0.01); // rotação reage à velocidade
-
-            if (p.y < -p.tamanho * 2) {
-                particulas[i] = criarParticula(canvas.height + p.tamanho);
-                continue;
-            }
-            if (p.x < -60) p.x = canvas.width  + 60;
-            if (p.x > canvas.width + 60) p.x = -60;
 
             ctx.save();
             ctx.globalAlpha = p.alfa;
+
+            // sombra no emoji arrastado para destacar
+            if (p.preso) {
+                ctx.shadowColor  = "rgba(255,255,255,0.6)";
+                ctx.shadowBlur   = 18;
+            }
+
             ctx.translate(p.x, p.y);
             ctx.rotate(p.rotacao);
-            ctx.font = `${p.tamanho}px serif`;
+            ctx.font         = `${p.preso ? p.tamanho * 1.4 : p.tamanho}px serif`;
             ctx.textAlign    = "center";
             ctx.textBaseline = "middle";
             ctx.fillText(p.emoji, 0, 0);
             ctx.restore();
         }
 
+        mouseAnteriorX = mouse.x;
+        mouseAnteriorY = mouse.y;
         requestAnimationFrame(desenhar);
     }
 
+    /* ---- eventos de arrastar (window-level para não bloquear o HTML) ---- */
+
+    window.addEventListener("mousedown", (e) => {
+        for (let i = particulas.length - 1; i >= 0; i--) {
+            if (acertou(particulas[i], e.clientX, e.clientY)) {
+                arrastando        = particulas[i];
+                particuleClicada  = particulas[i];
+                arrastando.preso  = true;
+                arrastando.vx     = 0;
+                arrastando.vy     = 0;
+                offsetX           = arrastando.x - e.clientX;
+                offsetY           = arrastando.y - e.clientY;
+                clicouX           = e.clientX;
+                clicouY           = e.clientY;
+                document.body.style.cursor     = "grabbing";
+                document.body.style.userSelect = "none";
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            }
+        }
+    }, { capture: true }); // capture:true para rodar antes dos outros listeners
+
+    window.addEventListener("mouseup", (e) => {
+        if (arrastando) {
+            const moveu = Math.abs(e.clientX - clicouX) > 5 || Math.abs(e.clientY - clicouY) > 5;
+
+            // foi um clique simples (sem arrasto) → define o estado no slider
+            if (!moveu && particuleClicada) {
+                const idx = EMOJI_ESTADO[particuleClicada.emoji];
+                if (idx !== undefined) definirEstadoPorIndice(idx);
+                particuleClicada.alfa = 0.9; // pulso visual
+            }
+
+            arrastando.preso           = false;
+            arrastando.vxBase          = arrastando.vx * 0.6;
+            arrastando.vyBase          = arrastando.vy * 0.6;
+            arrastando                 = null;
+            particuleClicada           = null;
+            document.body.style.cursor     = "";
+            document.body.style.userSelect = "";
+        }
+    });
+
+    window.addEventListener("mousemove", (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+
+        // cursor grab ao passar sobre emoji (apenas quando nada está sendo arrastado)
+        if (!arrastando) {
+            const sobre = particulas.some(p => acertou(p, e.clientX, e.clientY));
+            document.body.style.cursor = sobre ? "grab" : "";
+        }
+    });
+
+    window.addEventListener("mouseleave", () => {
+        mouse.x = -9999;
+        mouse.y = -9999;
+        document.body.style.cursor = "";
+    });
+
+    /* ---- touch (mobile) ---- */
+    window.addEventListener("touchstart", (e) => {
+        const t = e.touches[0];
+        for (let i = particulas.length - 1; i >= 0; i--) {
+            if (acertou(particulas[i], t.clientX, t.clientY)) {
+                arrastando       = particulas[i];
+                arrastando.preso = true;
+                arrastando.vx    = 0;
+                arrastando.vy    = 0;
+                offsetX          = arrastando.x - t.clientX;
+                offsetY          = arrastando.y - t.clientY;
+                break;
+            }
+        }
+    }, { passive: true, capture: true });
+
+    window.addEventListener("touchmove", (e) => {
+        const t = e.touches[0];
+        mouse.x = t.clientX;
+        mouse.y = t.clientY;
+    }, { passive: true });
+
+    window.addEventListener("touchend", () => {
+        if (arrastando) {
+            arrastando.preso  = false;
+            arrastando.vxBase = arrastando.vx * 0.6;
+            arrastando.vyBase = arrastando.vy * 0.6;
+            arrastando        = null;
+        }
+    });
+
     window.addEventListener("resize", redimensionar);
-    window.addEventListener("mousemove", (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
-    window.addEventListener("mouseleave", ()  => { mouse.x = -9999;    mouse.y = -9999; });
 
     iniciar();
     desenhar();
