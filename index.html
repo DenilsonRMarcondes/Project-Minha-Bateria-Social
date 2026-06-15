@@ -16,6 +16,14 @@ body {
     min-height: 100vh;
 }
 
+/* Canvas de partículas */
+#canvas-particulas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
 /* Bolhas decorativas no fundo */
 body::before,
 body::after {
@@ -342,6 +350,8 @@ body::after {
     flex-direction: column;
     flex: 1;
     gap: 2px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
 }
 
 .historico-item .hora {
@@ -488,6 +498,7 @@ body::after {
 </style>
 </head>
 
+<canvas id="canvas-particulas"></canvas>
 <body class="d-flex justify-content-center align-items-center min-vh-100">
 
 <div class="broche rounded-4 p-4" id="broche" tabindex="0">
@@ -896,6 +907,111 @@ modalSalvar.addEventListener("click", () => {
     modalEdicao.classList.remove("aberto");
     indiceSendoEditado = null;
 });
+
+/* EMOJIS FLUTUANTES */
+(function () {
+    const canvas = document.getElementById("canvas-particulas");
+    const ctx    = canvas.getContext("2d");
+
+    const EMOJIS = ["😞","🙁","😕","😐","🙂","😊","😁","⚡"];
+    let particulas = [];
+    const mouse = { x: -9999, y: -9999 };
+    const RAIO_REPULSAO = 120;
+    const FORCA_REPULSAO = 3.5;
+    const AMORTECIMENTO  = 0.92;
+
+    function redimensionar() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    function criarParticula(forcarY) {
+        const tamanho = Math.random() * 22 + 18;
+        return {
+            emoji:    EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
+            x:        Math.random() * canvas.width,
+            y:        forcarY !== undefined ? forcarY : Math.random() * canvas.height,
+            vx:       (Math.random() - 0.5) * 0.35,
+            vy:       -(Math.random() * 0.4 + 0.15),
+            vxBase:   (Math.random() - 0.5) * 0.35,
+            vyBase:   -(Math.random() * 0.4 + 0.15),
+            tamanho,
+            alfa:     Math.random() * 0.12 + 0.06,
+            dalfa:    (Math.random() * 0.002 + 0.001) * (Math.random() < 0.5 ? 1 : -1),
+            alfaMin:  0.04,
+            alfaMax:  0.18,
+            rotacao:  (Math.random() - 0.5) * 0.3,
+            drotacao: (Math.random() - 0.5) * 0.003,
+        };
+    }
+
+    function iniciar() {
+        redimensionar();
+        particulas = Array.from({ length: 22 }, () => criarParticula());
+    }
+
+    function desenhar() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < particulas.length; i++) {
+            const p = particulas[i];
+
+            // repulsão pelo mouse
+            const dx   = p.x - mouse.x;
+            const dy   = p.y - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < RAIO_REPULSAO && dist > 0) {
+                const forca = (RAIO_REPULSAO - dist) / RAIO_REPULSAO * FORCA_REPULSAO;
+                p.vx += (dx / dist) * forca;
+                p.vy += (dy / dist) * forca;
+                p.alfa = Math.min(p.alfaMax * 2.2, p.alfa + 0.04); // ilumina ao ser empurrado
+            } else {
+                // retorna suavemente à velocidade base
+                p.vx = p.vx * AMORTECIMENTO + p.vxBase * (1 - AMORTECIMENTO);
+                p.vy = p.vy * AMORTECIMENTO + p.vyBase * (1 - AMORTECIMENTO);
+                p.alfa += p.dalfa;
+            }
+
+            // limita velocidade máxima
+            const vel = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+            if (vel > 6) { p.vx = (p.vx / vel) * 6; p.vy = (p.vy / vel) * 6; }
+
+            if (p.alfa <= p.alfaMin || p.alfa >= p.alfaMax) p.dalfa *= -1;
+            p.alfa = Math.max(p.alfaMin, Math.min(p.alfaMax * 2.5, p.alfa));
+
+            p.x       += p.vx;
+            p.y       += p.vy;
+            p.rotacao += p.drotacao + (p.vx * 0.01); // rotação reage à velocidade
+
+            if (p.y < -p.tamanho * 2) {
+                particulas[i] = criarParticula(canvas.height + p.tamanho);
+                continue;
+            }
+            if (p.x < -60) p.x = canvas.width  + 60;
+            if (p.x > canvas.width + 60) p.x = -60;
+
+            ctx.save();
+            ctx.globalAlpha = p.alfa;
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotacao);
+            ctx.font = `${p.tamanho}px serif`;
+            ctx.textAlign    = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(p.emoji, 0, 0);
+            ctx.restore();
+        }
+
+        requestAnimationFrame(desenhar);
+    }
+
+    window.addEventListener("resize", redimensionar);
+    window.addEventListener("mousemove", (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+    window.addEventListener("mouseleave", ()  => { mouse.x = -9999;    mouse.y = -9999; });
+
+    iniciar();
+    desenhar();
+})();
 
 /* INICIALIZAR no centro (Neutro) */
 window.addEventListener("load", () => {
