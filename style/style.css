@@ -556,3 +556,415 @@ body::after {
     backdrop-filter: blur(6px);
     transition: background 0.3s ease, box-shadow 0.3s ease;
 }
+
+/* ============================================================
+   TÍTULO WRAPPER (para posicionar o botão de tema)
+   ============================================================ */
+
+.titulo-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.titulo-wrapper .titulo {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* ============================================================
+   BOTÃO DE TEMA
+   ============================================================ */
+
+.btn-tema {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.85);
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    backdrop-filter: blur(8px);
+    margin-bottom: 0;
+    flex-shrink: 0;
+}
+
+.btn-tema:hover {
+    background: rgba(255,255,255,0.18);
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* ============================================================
+   TEMA CLARO
+   ============================================================ */
+
+html.tema-claro body {
+    background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 40%, #b3c5ef 70%, #d1c4e9 100%);
+}
+
+html.tema-claro .broche {
+    background: rgba(255,255,255,0.65) !important;
+    border-color: rgba(255,255,255,0.8);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+html.tema-claro .titulo { color: #6200ea !important; }
+
+html.tema-claro .mensagem { color: #444 !important; }
+
+html.tema-claro .legenda { color: rgba(0,0,0,0.6) !important; }
+
+html.tema-claro .legenda-item { color: rgba(0,0,0,0.65); }
+
+html.tema-claro .legenda-item.ativo {
+    color: rgba(0,0,0,0.9);
+    background: rgba(0,0,0,0.06);
+    border-color: rgba(0,0,0,0.15);
+}
+
+html.tema-claro .historico-titulo { color: rgba(0,0,0,0.4); }
+html.tema-claro .historico-item {
+    background: rgba(0,0,0,0.04);
+    border-color: rgba(0,0,0,0.1);
+    color: rgba(0,0,0,0.85);
+}
+html.tema-claro .historico-item .info { color: rgba(0,0,0,0.85); }
+html.tema-claro .historico-item .hora { color: rgba(0,0,0,0.4); }
+html.tema-claro .historico-vazio { color: rgba(0,0,0,0.3); }
+
+html.tema-claro .btn-registrar {
+    background: rgba(0,0,0,0.08);
+    border-color: rgba(0,0,0,0.15);
+    color: rgba(0,0,0,0.8);
+}
+html.tema-claro .btn-registrar:hover { background: rgba(0,0,0,0.14); }
+
+html.tema-claro .btn-crud {
+    background: rgba(0,0,0,0.05);
+    border-color: rgba(0,0,0,0.1);
+    color: rgba(0,0,0,0.5);
+}
+html.tema-claro .btn-crud:hover { background: rgba(0,0,0,0.12); color: #000; }
+
+html.tema-claro .slider { background: rgba(0,0,0,0.1); }
+
+html.tema-claro .balao {
+    background: rgba(255,255,255,0.8) !important;
+    border-color: rgba(0,0,0,0.15) !important;
+    color: #222 !important;
+}
+
+html.tema-claro .modal-glass-box {
+    background: rgba(255,255,255,0.75);
+    border-color: rgba(255,255,255,0.9);
+    color: #222;
+}
+html.tema-claro .modal-glass-box h6 { color: rgba(0,0,0,0.4); }
+html.tema-claro .btn-modal { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.12); color: rgba(0,0,0,0.8); }
+html.tema-claro .btn-modal:hover { background: rgba(0,0,0,0.12); }
+
+html.tema-claro .grafico-secao { border-color: rgba(0,0,0,0.1); }
+html.tema-claro .grafico-header .historico-titulo { color: rgba(0,0,0,0.4); }
+html.tema-claro .btn-toggle-grafico { color: rgba(0,0,0,0.4); }
+html.tema-claro .btn-personalizar { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.12); color: rgba(0,0,0,0.7); }
+html.tema-claro .btn-limpar-historico { color: rgba(0,0,0,0.4); }
+html.tema-claro .btn-filtro { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.12); color: rgba(0,0,0,0.6); }
+html.tema-claro .btn-filtro.ativo { background: rgba(0,0,0,0.14); }
+html.tema-claro .filtro-select, html.tema-claro .filtro-data {
+    background: rgba(0,0,0,0.05);
+    border-color: rgba(0,0,0,0.15);
+    color: rgba(0,0,0,0.75);
+}
+
+/* ============================================================
+   ANIMAÇÃO PULSO NO SEGMENTO
+   ============================================================ */
+
+@keyframes pulso {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.18); }
+    100% { transform: scale(1); }
+}
+
+.segmento.pulsando {
+    animation: pulso 0.35s cubic-bezier(.4,0,.2,1) both;
+    z-index: 5;
+}
+
+/* ============================================================
+   BADGE DE CONTAGEM
+   ============================================================ */
+
+.badge-count {
+    display: none;
+    margin-left: auto;
+    background: rgba(111,208,255,0.25);
+    color: #6fd0ff;
+    border: 1px solid rgba(111,208,255,0.4);
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   BOTÃO PERSONALIZAR
+   ============================================================ */
+
+.btn-personalizar {
+    width: 100%;
+    padding: 8px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    backdrop-filter: blur(6px);
+}
+
+.btn-personalizar:hover {
+    background: rgba(255,255,255,0.14);
+    color: #fff;
+}
+
+/* ============================================================
+   HISTÓRICO — HEADER E FILTROS
+   ============================================================ */
+
+.historico-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.historico-header .historico-titulo {
+    margin-bottom: 0;
+}
+
+.btn-limpar-historico {
+    font-size: 0.75rem;
+    border: none;
+    background: transparent;
+    color: rgba(255,80,80,0.7);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 6px;
+    border-radius: 8px;
+    transition: color 0.2s, background 0.2s;
+}
+
+.btn-limpar-historico:hover {
+    color: #ff6b6b;
+    background: rgba(255,80,80,0.1);
+}
+
+.historico-filtros {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-filtro {
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.6);
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+.btn-filtro.ativo {
+    background: rgba(111,208,255,0.2);
+    border-color: rgba(111,208,255,0.4);
+    color: #6fd0ff;
+}
+
+.filtro-select {
+    flex: 1;
+    min-width: 0;
+    padding: 4px 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.7);
+    font-size: 0.78rem;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+}
+
+.filtro-select option { background: #1e2a3a; color: #fff; }
+
+.filtro-data {
+    padding: 4px 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.7);
+    font-size: 0.78rem;
+    cursor: pointer;
+    outline: none;
+    colorscheme: dark;
+}
+
+/* ============================================================
+   GRÁFICO SEMANAL
+   ============================================================ */
+
+.grafico-secao {
+    margin-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding-top: 14px;
+}
+
+.grafico-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.grafico-header .historico-titulo {
+    margin-bottom: 0;
+}
+
+.btn-toggle-grafico {
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.4);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+}
+
+.btn-toggle-grafico:hover {
+    color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.07);
+}
+
+.grafico-wrapper {
+    height: 180px;
+    overflow: hidden;
+    transition: height 0.35s cubic-bezier(.4,0,.2,1), opacity 0.3s ease;
+    opacity: 1;
+}
+
+.grafico-wrapper.fechado {
+    height: 0;
+    opacity: 0;
+}
+
+/* ============================================================
+   MODAL DE PERSONALIZAÇÃO
+   ============================================================ */
+
+.modal-personalizar-box {
+    width: min(520px, 94vw);
+    max-height: 85vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.15) transparent;
+}
+
+.personalizar-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.6);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.tab-btn.ativo {
+    background: rgba(111,208,255,0.2);
+    border-color: rgba(111,208,255,0.4);
+    color: #6fd0ff;
+}
+
+.tab-content { display: none; }
+.tab-content.ativo { display: block; }
+
+.personalizar-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: center;
+}
+
+.personalizar-emoji {
+    width: 54px;
+    flex-shrink: 0;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 1.1rem;
+    text-align: center;
+    outline: none;
+}
+
+.personalizar-nome,
+.personalizar-msg {
+    flex: 1;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.personalizar-nome:focus,
+.personalizar-msg:focus,
+.personalizar-emoji:focus {
+    border-color: rgba(111,208,255,0.5);
+    background: rgba(255,255,255,0.12);
+}
+
+.personalizar-label {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.5);
+    min-width: 110px;
+    flex-shrink: 0;
+}
+

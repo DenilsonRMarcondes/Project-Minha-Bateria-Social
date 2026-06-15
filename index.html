@@ -12,14 +12,20 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <!-- Estilos do projeto -->
 <link href="style/style.css" rel="stylesheet">
-
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<!-- canvas-confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 </head>
 
 <canvas id="canvas-particulas"></canvas>
 <body class="d-flex justify-content-center align-items-center min-vh-100">
 
 <div class="broche rounded-4 p-4" id="broche" tabindex="0">
-    <div class="titulo text-center fs-5 mb-3 text-warning">MINHA BATERIA SOCIAL</div>
+    <div class="titulo-wrapper mb-3">
+        <div class="titulo text-center fs-5 text-warning">MINHA BATERIA SOCIAL</div>
+        <button class="btn-tema" id="btn-tema" title="Alternar tema"><i class="bi bi-moon-stars-fill"></i></button>
+    </div>
 
     <div class="barra" id="barra">
         <div class="segmento red">😞</div>
@@ -48,22 +54,45 @@
 
     <div class="mensagem text-secondary mt-3" id="mensagem"></div>
 
-    <div class="legenda row g-2 pt-3 border-top mt-2">
-        <div class="legenda-item col-6"><span>😞</span> Muito esgotado</div>
-        <div class="legenda-item col-6"><span>🙁</span> Esgotado</div>
-        <div class="legenda-item col-6"><span>😕</span> Baixo</div>
-        <div class="legenda-item col-6"><span>😐</span> Neutro</div>
-        <div class="legenda-item col-6"><span>🙂</span> Bem</div>
-        <div class="legenda-item col-6"><span>😊</span> Animado</div>
-        <div class="legenda-item col-6"><span>😁</span> No topo</div>
+    <div class="legenda row g-2 pt-3 border-top mt-2" id="legenda-container">
+        <div class="legenda-item col-6" data-idx="0"><span>😞</span> <span class="legenda-nome">Muito esgotado</span><span class="badge-count" id="badge-0">0</span></div>
+        <div class="legenda-item col-6" data-idx="1"><span>🙁</span> <span class="legenda-nome">Esgotado</span><span class="badge-count" id="badge-1">0</span></div>
+        <div class="legenda-item col-6" data-idx="2"><span>😕</span> <span class="legenda-nome">Baixo</span><span class="badge-count" id="badge-2">0</span></div>
+        <div class="legenda-item col-6" data-idx="3"><span>😐</span> <span class="legenda-nome">Neutro</span><span class="badge-count" id="badge-3">0</span></div>
+        <div class="legenda-item col-6" data-idx="4"><span>🙂</span> <span class="legenda-nome">Bem</span><span class="badge-count" id="badge-4">0</span></div>
+        <div class="legenda-item col-6" data-idx="5"><span>😊</span> <span class="legenda-nome">Animado</span><span class="badge-count" id="badge-5">0</span></div>
+        <div class="legenda-item col-6" data-idx="6"><span>😁</span> <span class="legenda-nome">No topo</span><span class="badge-count" id="badge-6">0</span></div>
     </div>
 
-    <button class="btn-registrar mt-4" id="btn-registrar">⚡ Registrar agora</button>
+    <button class="btn-personalizar mt-2" id="btn-personalizar">⚙️ Personalizar</button>
+
+    <button class="btn-registrar mt-3" id="btn-registrar">⚡ Registrar agora</button>
 
     <div class="historico" id="historico">
-        <div class="historico-titulo">Histórico de hoje</div>
+        <div class="historico-header">
+            <div class="historico-titulo">Histórico</div>
+            <button class="btn-limpar-historico" id="btn-limpar-historico" title="Limpar tudo"><i class="bi bi-trash3"></i> Limpar tudo</button>
+        </div>
+        <div class="historico-filtros">
+            <button class="btn-filtro ativo" id="filtro-todos" data-filtro="todos">Todos</button>
+            <select id="filtro-estado" class="filtro-select">
+                <option value="">Filtrar por estado…</option>
+            </select>
+            <input type="date" id="filtro-data" class="filtro-data" title="Filtrar por data">
+        </div>
         <div class="historico-lista" id="historico-lista">
             <div class="historico-vazio" id="historico-vazio">Nenhum registro ainda.</div>
+        </div>
+    </div>
+
+    <!-- Seção do gráfico semanal -->
+    <div class="grafico-secao" id="grafico-secao">
+        <div class="grafico-header">
+            <div class="historico-titulo">Evolução Semanal</div>
+            <button class="btn-toggle-grafico" id="btn-toggle-grafico"><i class="bi bi-chevron-down"></i></button>
+        </div>
+        <div class="grafico-wrapper" id="grafico-wrapper">
+            <canvas id="grafico-semanal"></canvas>
         </div>
     </div>
 </div>
@@ -115,6 +144,44 @@
     </div>
 </div>
 
+<!-- Modal de confirmação de limpar histórico -->
+<div class="modal-glass" id="modal-limpar">
+    <div class="modal-glass-box" style="text-align:center;">
+        <div style="font-size:2rem; margin-bottom:12px;">🗑️</div>
+        <h6 style="font-size:0.75rem; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:8px;">Limpar histórico</h6>
+        <p style="color:rgba(255,255,255,0.8); font-size:1rem; margin-bottom:22px;">Deseja limpar todo o histórico?</p>
+        <div class="modal-acoes">
+            <button class="btn-modal" id="limpar-nao"><i class="bi bi-x-lg me-1"></i>Não</button>
+            <button class="btn-modal confirmar-sim" id="limpar-sim"><i class="bi bi-check-lg me-1"></i>Sim</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de personalização -->
+<div class="modal-glass" id="modal-personalizar">
+    <div class="modal-glass-box modal-personalizar-box">
+        <div class="personalizar-tabs">
+            <button class="tab-btn ativo" data-tab="estados">Estados</button>
+            <button class="tab-btn" data-tab="mensagens">Mensagens</button>
+        </div>
+
+        <div class="tab-content ativo" id="tab-estados">
+            <h6>Personalizar estados</h6>
+            <div id="lista-personalizar-estados"></div>
+        </div>
+
+        <div class="tab-content" id="tab-mensagens">
+            <h6>Personalizar mensagens</h6>
+            <div id="lista-personalizar-mensagens"></div>
+        </div>
+
+        <div class="modal-acoes mt-3">
+            <button class="btn-modal" id="personalizar-cancelar">Cancelar</button>
+            <button class="btn-modal salvar" id="personalizar-salvar"><i class="bi bi-check-lg me-1"></i>Salvar</button>
+        </div>
+    </div>
+</div>
+
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script>
@@ -131,7 +198,8 @@ const btnRegistrar       = document.getElementById("btn-registrar");
 const historicoLista     = document.getElementById("historico-lista");
 const historicoVazio     = document.getElementById("historico-vazio");
 
-const estados = [
+// Estados e mensagens — podem ser sobrescritos por extras.js via localStorage
+var estadosDefault = [
     "Muito esgotado 😞",
     "Esgotado 🙁",
     "Baixo 😕",
@@ -141,7 +209,7 @@ const estados = [
     "No topo 😁"
 ];
 
-const mensagens = [
+var mensagensDefault = [
     "Descanse. Você merece um tempo só seu. 💤",
     "Tudo bem precisar de uma pausa. 🌿",
     "Vá devagar. Recupere suas energias. 🍵",
@@ -150,6 +218,10 @@ const mensagens = [
     "Energia alta! Aproveite esse momento. 🎉",
     "Você está arrasando! No topo! 🚀"
 ];
+
+// Carrega customizações do localStorage se existirem
+var estados = JSON.parse(localStorage.getItem("bateria_social_estados") || "null") || estadosDefault;
+var mensagens = JSON.parse(localStorage.getItem("bateria_social_mensagens") || "null") || mensagensDefault;
 
 /* Porcentagens e cores da bateria por índice */
 const bateriaPercents = [5, 18, 33, 50, 66, 82, 100];
@@ -198,6 +270,14 @@ function atualizar(posX, mostrarBalao = true) {
 
         // destaque na legenda
         legendaItens.forEach((el, i) => el.classList.toggle("ativo", i === index));
+
+        // pulso no segmento ativo
+        const segmentos = barra.querySelectorAll(".segmento");
+        segmentos.forEach(s => s.classList.remove("pulsando"));
+        if (segmentos[index]) {
+            segmentos[index].classList.add("pulsando");
+            segmentos[index].addEventListener("animationend", () => segmentos[index].classList.remove("pulsando"), { once: true });
+        }
     }
 
     balao.textContent = estados[index];
@@ -263,36 +343,67 @@ document.addEventListener("touchmove", (e) => {
 }, { passive: true });
 
 /* HISTÓRICO */
-const CHAVE_HISTORICO = "bateria_social_historico";
+const CHAVE_HISTORICO_V2 = "bateria_social_historico_v2";
 
 function hojeStr() {
     return new Date().toLocaleDateString("pt-BR");
 }
 
+function migrarHistoricoLegado() {
+    const legado = localStorage.getItem("bateria_social_historico");
+    if (!legado) return;
+    try {
+        const salvo = JSON.parse(legado);
+        if (salvo && salvo.registros && salvo.registros.length > 0) {
+            const atual = carregarHistorico();
+            const merged = [...salvo.registros.map(r => ({ ...r, data: r.data || salvo.data || hojeStr() })), ...atual];
+            // dedup por estado+hora+data
+            const vistos = new Set();
+            const dedup = merged.filter(r => {
+                const k = r.estado + r.hora + r.data;
+                if (vistos.has(k)) return false;
+                vistos.add(k); return true;
+            });
+            salvarHistorico(dedup);
+        }
+    } catch(e) {}
+    localStorage.removeItem("bateria_social_historico");
+}
+
 function carregarHistorico() {
-    const salvo = JSON.parse(localStorage.getItem(CHAVE_HISTORICO) || "{}");
-    // limpa registros de outros dias
-    if (salvo.data !== hojeStr()) return [];
-    return salvo.registros || [];
+    return JSON.parse(localStorage.getItem(CHAVE_HISTORICO_V2) || "[]");
 }
 
 function salvarHistorico(registros) {
-    localStorage.setItem(CHAVE_HISTORICO, JSON.stringify({ data: hojeStr(), registros }));
+    localStorage.setItem(CHAVE_HISTORICO_V2, JSON.stringify(registros));
 }
 
-function renderizarHistorico() {
+function renderizarHistorico(filtroEstado, filtroData) {
     const registros = carregarHistorico();
     historicoLista.querySelectorAll(".historico-item").forEach(el => el.remove());
 
-    if (registros.length === 0) {
+    // aplicar filtros
+    let visiveis = registros.map((reg, i) => ({ ...reg, i }));
+    if (filtroEstado) visiveis = visiveis.filter(r => r.estado === filtroEstado);
+    if (filtroData) visiveis = visiveis.filter(r => {
+        // filtroData é YYYY-MM-DD, r.data é DD/MM/YYYY
+        const [y,m,d] = filtroData.split("-");
+        return r.data === `${d}/${m}/${y}`;
+    });
+
+    // mais recente primeiro
+    visiveis.reverse();
+
+    if (visiveis.length === 0) {
         historicoVazio.style.display = "block";
+        // atualiza badges mesmo sem itens visíveis
+        if (typeof atualizarBadges === "function") atualizarBadges();
         return;
     }
 
     historicoVazio.style.display = "none";
 
-    // mais recente primeiro, mantendo índice original para CRUD
-    [...registros].map((reg, i) => ({ ...reg, i })).reverse().forEach(({ estado, hora, data, i }) => {
+    visiveis.forEach(({ estado, hora, data, i }) => {
         const item = document.createElement("div");
         item.className = "historico-item";
         item.innerHTML = `
@@ -318,6 +429,8 @@ function renderizarHistorico() {
     historicoLista.querySelectorAll(".btn-crud.excluir").forEach(btn => {
         btn.addEventListener("click", () => excluirRegistro(parseInt(btn.dataset.i)));
     });
+
+    if (typeof atualizarBadges === "function") atualizarBadges();
 }
 
 /* REGISTRAR */
@@ -329,6 +442,9 @@ btnRegistrar.addEventListener("click", () => {
     registros.push({ estado: estados[indiceAtual], hora, data });
     salvarHistorico(registros);
     renderizarHistorico();
+
+    // hooks para extras.js
+    if (typeof aoRegistrar === "function") aoRegistrar(indiceAtual, data);
 
     btnRegistrar.innerHTML = "<i class='bi bi-check-lg me-1'></i>Registrado!";
     btnRegistrar.classList.add("confirmado");
@@ -679,12 +795,13 @@ modalSalvar.addEventListener("click", () => {
 
 /* INICIALIZAR no centro (Neutro) */
 window.addEventListener("load", () => {
+    migrarHistoricoLegado();
     const rect = slider.getBoundingClientRect();
     const centroX = rect.left + rect.width / 2;
     atualizar(centroX, false);
     renderizarHistorico();
 });
 </script>
-
+<script src="js/extras.js"></script>
 </body>
 </html>
