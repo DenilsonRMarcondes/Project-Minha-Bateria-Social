@@ -6,6 +6,8 @@
 <title>Bateria Social</title>
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
 <style>
 body {
@@ -43,7 +45,7 @@ body::after {
 }
 
 .broche {
-    width: 420px;
+    width: min(560px, 92vw);
     position: relative;
     z-index: 1;
     /* Liquid Glass */
@@ -60,18 +62,19 @@ body::after {
 
 .titulo {
     text-align: center;
-    font-size: 22px;
-    margin-bottom: 15px;
+    font-size: 1.5rem;
+    margin-bottom: 1.2rem;
+    letter-spacing: 1px;
 }
 
 /* BARRA */
 .barra {
     position: relative;
-    height: 40px;
-    border-radius: 10px;
+    height: 56px;
+    border-radius: 14px;
     display: flex;
     overflow: hidden;
-    margin-bottom: 20px;
+    margin-bottom: 28px;
     cursor: pointer;
 }
 
@@ -80,7 +83,7 @@ body::after {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 18px;
+    font-size: 26px;
     position: relative;
 }
 
@@ -93,17 +96,17 @@ body::after {
 /* SLIDER */
 .slider {
     position: relative;
-    height: 12px;
+    height: 16px;
     background: rgba(255, 255, 255, 0.15);
-    border-radius: 6px;
+    border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .raio {
     position: absolute;
-    top: -18px;
+    top: -22px;
     left: 0;
-    font-size: 32px;
+    font-size: 42px;
     cursor: grab;
     transition: transform 0.15s ease;
     outline: none;
@@ -117,10 +120,10 @@ body::after {
 /* BALÃO */
 .balao {
     position: absolute;
-    bottom: 55px;
+    bottom: 68px;
     left: 0;
     transform: translateX(-50%) scale(0.8);
-    font-size: 13px;
+    font-size: 15px;
     opacity: 0;
     pointer-events: none;
     transition: 0.2s ease;
@@ -152,9 +155,9 @@ body::after {
 /* MENSAGEM MOTIVACIONAL */
 .mensagem {
     text-align: center;
-    font-size: 13px;
+    font-size: 1rem;
     font-style: italic;
-    min-height: 20px;
+    min-height: 24px;
     transition: opacity 0.3s ease;
     opacity: 0.85;
 }
@@ -164,8 +167,8 @@ body::after {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 14px;
-    margin: 16px 0 4px;
+    gap: 16px;
+    margin: 20px 0 6px;
 }
 
 .bateria-wrapper {
@@ -175,8 +178,8 @@ body::after {
 
 /* Pino positivo (à direita — frente da pilha) */
 .bateria-pino {
-    width: 8px;
-    height: 18px;
+    width: 10px;
+    height: 22px;
     border-radius: 0 3px 3px 0;
     background: linear-gradient(
         to bottom,
@@ -193,8 +196,8 @@ body::after {
 /* Corpo da pilha */
 .bateria {
     position: relative;
-    width: 110px;
-    height: 38px;
+    width: 140px;
+    height: 48px;
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.07);
     backdrop-filter: blur(14px) saturate(160%);
@@ -235,26 +238,247 @@ body::after {
 }
 
 .bateria-porcentagem {
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 700;
     letter-spacing: 0.5px;
     color: rgba(255,255,255,0.75);
-    min-width: 40px;
+    min-width: 50px;
     transition: color 0.5s ease;
     text-shadow: 0 0 10px currentColor;
 }
 
+/* ANIMAÇÃO DE ENTRADA */
+@keyframes entrar {
+    from {
+        opacity: 0;
+        transform: translateY(32px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.broche {
+    animation: entrar 0.6s cubic-bezier(.4,0,.2,1) both;
+}
+
+/* BOTÃO REGISTRAR */
+.btn-registrar {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.9);
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.btn-registrar:hover {
+    background: rgba(255,255,255,0.18);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+}
+
+.btn-registrar:active {
+    transform: scale(0.97);
+}
+
+.btn-registrar.confirmado {
+    background: rgba(111, 220, 111, 0.25);
+    border-color: rgba(111, 220, 111, 0.5);
+    color: #6fdc6f;
+}
+
+/* HISTÓRICO */
+.historico {
+    margin-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding-top: 14px;
+}
+
+.historico-titulo {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 10px;
+}
+
+.historico-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 180px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.15) transparent;
+}
+
+.historico-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.9rem;
+    animation: entrar 0.3s ease both;
+    transition: background 0.2s;
+}
+
+.historico-item:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.historico-item .info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 2px;
+}
+
+.historico-item .hora {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.35);
+}
+
+.historico-item .acoes {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.btn-crud {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.6);
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+    backdrop-filter: blur(6px);
+}
+
+.btn-crud:hover { background: rgba(255,255,255,0.16); color: #fff; }
+.btn-crud:active { transform: scale(0.9); }
+.btn-crud.excluir:hover    { background: rgba(255,80,80,0.25);   border-color: rgba(255,80,80,0.4);   color: #ff6b6b; }
+.btn-crud.editar:hover     { background: rgba(111,208,255,0.2);  border-color: rgba(111,208,255,0.4);  color: #6fd0ff; }
+.btn-crud.visualizar:hover { background: rgba(168,85,247,0.2);   border-color: rgba(168,85,247,0.4);   color: #c084fc; }
+
+.historico-vazio {
+    text-align: center;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.25);
+    font-style: italic;
+    padding: 8px 0;
+}
+
+/* MODAL DE EDIÇÃO (liquid glass) */
+.modal-glass {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-glass.aberto { display: flex; }
+
+.modal-glass-box {
+    width: min(420px, 90vw);
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 28px 24px 20px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.25);
+    animation: entrar 0.25s ease both;
+    color: #fff;
+}
+
+.modal-glass-box h6 {
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 16px;
+}
+
+.modal-glass-box select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 1rem;
+    backdrop-filter: blur(8px);
+    appearance: none;
+    cursor: pointer;
+    outline: none;
+    margin-bottom: 20px;
+}
+
+.modal-glass-box select option { background: #1e2a3a; color: #fff; }
+
+.modal-acoes {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-modal {
+    flex: 1;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.85);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+}
+
+.btn-modal:hover { background: rgba(255,255,255,0.18); }
+.btn-modal:active { transform: scale(0.97); }
+.btn-modal.salvar   { background: rgba(111,220,111,0.2);  border-color: rgba(111,220,111,0.4);  color: #6fdc6f; }
+.btn-modal.salvar:hover   { background: rgba(111,220,111,0.32); }
+.btn-modal.confirmar-sim  { background: rgba(255,80,80,0.2);   border-color: rgba(255,80,80,0.4);   color: #ff6b6b; }
+.btn-modal.confirmar-sim:hover { background: rgba(255,80,80,0.32); }
+
 /* LEGENDA */
 .legenda {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.5);
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.55);
     border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
 .legenda-item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    padding: 4px 0;
+    font-size: 1rem;
+}
+
+.legenda-item span {
+    font-size: 1.3rem;
 }
 
 .legenda-item.ativo {
@@ -305,6 +529,61 @@ body::after {
         <div class="legenda-item col-6"><span>😊</span> Animado</div>
         <div class="legenda-item col-6"><span>😁</span> No topo</div>
     </div>
+
+    <button class="btn-registrar mt-4" id="btn-registrar">⚡ Registrar agora</button>
+
+    <div class="historico" id="historico">
+        <div class="historico-titulo">Histórico de hoje</div>
+        <div class="historico-lista" id="historico-lista">
+            <div class="historico-vazio" id="historico-vazio">Nenhum registro ainda.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de visualização -->
+<div class="modal-glass" id="modal-visualizacao">
+    <div class="modal-glass-box" style="text-align:center;">
+        <h6>Detalhes do registro</h6>
+        <div id="viz-emoji" style="font-size:3rem; margin-bottom:10px;"></div>
+        <div id="viz-estado" style="font-size:1.2rem; font-weight:600; color:#fff; margin-bottom:8px;"></div>
+        <div id="viz-hora" style="font-size:0.85rem; color:rgba(255,255,255,0.4); margin-bottom:24px;">
+            <i class="bi bi-clock me-1"></i><span></span>
+        </div>
+        <button class="btn-modal" id="viz-fechar"><i class="bi bi-x-lg me-1"></i>Fechar</button>
+    </div>
+</div>
+
+<!-- Modal de confirmação de exclusão -->
+<div class="modal-glass" id="modal-confirmacao">
+    <div class="modal-glass-box" style="text-align:center;">
+        <div style="font-size:2rem; margin-bottom:12px;">🗑️</div>
+        <h6 style="font-size:0.75rem; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:8px;">Excluir registro</h6>
+        <p style="color:rgba(255,255,255,0.8); font-size:1rem; margin-bottom:22px;">Deseja realmente excluir este registro?</p>
+        <div class="modal-acoes">
+            <button class="btn-modal" id="confirmar-nao"><i class="bi bi-x-lg me-1"></i>Não</button>
+            <button class="btn-modal confirmar-sim" id="confirmar-sim"><i class="bi bi-check-lg me-1"></i>Sim</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de edição -->
+<div class="modal-glass" id="modal-edicao">
+    <div class="modal-glass-box">
+        <h6>Editar registro</h6>
+        <select id="modal-select">
+            <option value="0">Muito esgotado 😞</option>
+            <option value="1">Esgotado 🙁</option>
+            <option value="2">Baixo 😕</option>
+            <option value="3">Neutro 😐</option>
+            <option value="4">Bem 🙂</option>
+            <option value="5">Animado 😊</option>
+            <option value="6">No topo 😁</option>
+        </select>
+        <div class="modal-acoes">
+            <button class="btn-modal" id="modal-cancelar">Cancelar</button>
+            <button class="btn-modal salvar" id="modal-salvar"><i class="bi bi-check-lg me-1"></i>Salvar</button>
+        </div>
+    </div>
 </div>
 
 <!-- Bootstrap JS -->
@@ -315,10 +594,13 @@ const slider  = document.getElementById("slider");
 const balao   = document.getElementById("balao");
 const broche  = document.getElementById("broche");
 const barra   = document.getElementById("barra");
-const mensagemEl        = document.getElementById("mensagem");
-const bateriaNivel      = document.getElementById("bateria-nivel");
+const mensagemEl         = document.getElementById("mensagem");
+const bateriaNivel       = document.getElementById("bateria-nivel");
 const bateriaPorcentagem = document.getElementById("bateria-porcentagem");
-const legendaItens = document.querySelectorAll(".legenda-item");
+const legendaItens       = document.querySelectorAll(".legenda-item");
+const btnRegistrar       = document.getElementById("btn-registrar");
+const historicoLista     = document.getElementById("historico-lista");
+const historicoVazio     = document.getElementById("historico-vazio");
 
 const estados = [
     "Muito esgotado 😞",
@@ -443,11 +725,184 @@ document.addEventListener("touchmove", (e) => {
     if (dragging) atualizar(e.touches[0].clientX);
 }, { passive: true });
 
+/* HISTÓRICO */
+const CHAVE_HISTORICO = "bateria_social_historico";
+
+function hojeStr() {
+    return new Date().toLocaleDateString("pt-BR");
+}
+
+function carregarHistorico() {
+    const salvo = JSON.parse(localStorage.getItem(CHAVE_HISTORICO) || "{}");
+    // limpa registros de outros dias
+    if (salvo.data !== hojeStr()) return [];
+    return salvo.registros || [];
+}
+
+function salvarHistorico(registros) {
+    localStorage.setItem(CHAVE_HISTORICO, JSON.stringify({ data: hojeStr(), registros }));
+}
+
+function renderizarHistorico() {
+    const registros = carregarHistorico();
+    historicoLista.querySelectorAll(".historico-item").forEach(el => el.remove());
+
+    if (registros.length === 0) {
+        historicoVazio.style.display = "block";
+        return;
+    }
+
+    historicoVazio.style.display = "none";
+
+    // mais recente primeiro, mantendo índice original para CRUD
+    [...registros].map((reg, i) => ({ ...reg, i })).reverse().forEach(({ estado, hora, i }) => {
+        const item = document.createElement("div");
+        item.className = "historico-item";
+        item.innerHTML = `
+            <div class="info">
+                <span>${estado}</span>
+                <span class="hora"><i class="bi bi-clock me-1"></i>${hora}</span>
+            </div>
+            <div class="acoes">
+                <button class="btn-crud visualizar" title="Visualizar" data-i="${i}"><i class="bi bi-eye"></i></button>
+                <button class="btn-crud editar"     title="Editar"     data-i="${i}"><i class="bi bi-pencil"></i></button>
+                <button class="btn-crud excluir"    title="Excluir"    data-i="${i}"><i class="bi bi-trash3"></i></button>
+            </div>`;
+        historicoLista.appendChild(item);
+    });
+
+    // eventos dos botões
+    historicoLista.querySelectorAll(".btn-crud.visualizar").forEach(btn => {
+        btn.addEventListener("click", () => abrirVisualizacao(parseInt(btn.dataset.i)));
+    });
+    historicoLista.querySelectorAll(".btn-crud.editar").forEach(btn => {
+        btn.addEventListener("click", () => abrirEdicao(parseInt(btn.dataset.i)));
+    });
+    historicoLista.querySelectorAll(".btn-crud.excluir").forEach(btn => {
+        btn.addEventListener("click", () => excluirRegistro(parseInt(btn.dataset.i)));
+    });
+}
+
+/* REGISTRAR */
+btnRegistrar.addEventListener("click", () => {
+    const agora = new Date();
+    const hora = agora.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+    const registros = carregarHistorico();
+    registros.push({ estado: estados[indiceAtual], hora });
+    salvarHistorico(registros);
+    renderizarHistorico();
+
+    btnRegistrar.innerHTML = "<i class='bi bi-check-lg me-1'></i>Registrado!";
+    btnRegistrar.classList.add("confirmado");
+    setTimeout(() => {
+        btnRegistrar.innerHTML = "⚡ Registrar agora";
+        btnRegistrar.classList.remove("confirmado");
+    }, 1800);
+});
+
+/* VISUALIZAR */
+const modalVisualizacao = document.getElementById("modal-visualizacao");
+const vizFechar         = document.getElementById("viz-fechar");
+const vizEmoji          = document.getElementById("viz-emoji");
+const vizEstado         = document.getElementById("viz-estado");
+const vizHora           = document.getElementById("viz-hora").querySelector("span");
+
+// extrai emoji e texto do estado (ex: "Bem 🙂" → emoji "🙂", texto "Bem")
+const emojisPorIndice = ["😞","🙁","😕","😐","🙂","😊","😁"];
+
+function abrirVisualizacao(i) {
+    const registros = carregarHistorico();
+    const reg = registros[i];
+    const idxEstado = estados.indexOf(reg.estado);
+    vizEmoji.textContent  = emojisPorIndice[idxEstado] ?? "⚡";
+    vizEstado.textContent = reg.estado;
+    vizHora.textContent   = reg.hora;
+    modalVisualizacao.classList.add("aberto");
+}
+
+vizFechar.addEventListener("click", () => modalVisualizacao.classList.remove("aberto"));
+
+modalVisualizacao.addEventListener("click", (e) => {
+    if (e.target === modalVisualizacao) modalVisualizacao.classList.remove("aberto");
+});
+
+/* EXCLUIR — com confirmação */
+const modalConfirmacao = document.getElementById("modal-confirmacao");
+const confirmarSim     = document.getElementById("confirmar-sim");
+const confirmarNao     = document.getElementById("confirmar-nao");
+let indiceParaExcluir  = null;
+
+function excluirRegistro(i) {
+    indiceParaExcluir = i;
+    modalConfirmacao.classList.add("aberto");
+}
+
+confirmarSim.addEventListener("click", () => {
+    if (indiceParaExcluir === null) return;
+    const registros = carregarHistorico();
+    registros.splice(indiceParaExcluir, 1);
+    salvarHistorico(registros);
+    renderizarHistorico();
+    modalConfirmacao.classList.remove("aberto");
+    indiceParaExcluir = null;
+});
+
+confirmarNao.addEventListener("click", () => {
+    modalConfirmacao.classList.remove("aberto");
+    indiceParaExcluir = null;
+});
+
+modalConfirmacao.addEventListener("click", (e) => {
+    if (e.target === modalConfirmacao) {
+        modalConfirmacao.classList.remove("aberto");
+        indiceParaExcluir = null;
+    }
+});
+
+/* EDITAR — modal */
+const modalEdicao   = document.getElementById("modal-edicao");
+const modalSelect   = document.getElementById("modal-select");
+const modalCancelar = document.getElementById("modal-cancelar");
+const modalSalvar   = document.getElementById("modal-salvar");
+let indiceSendoEditado = null;
+
+function abrirEdicao(i) {
+    const registros = carregarHistorico();
+    indiceSendoEditado = i;
+    // pré-seleciona o estado atual no select
+    const indexEstado = estados.indexOf(registros[i].estado);
+    modalSelect.value = indexEstado >= 0 ? indexEstado : 0;
+    modalEdicao.classList.add("aberto");
+}
+
+modalCancelar.addEventListener("click", () => {
+    modalEdicao.classList.remove("aberto");
+    indiceSendoEditado = null;
+});
+
+modalEdicao.addEventListener("click", (e) => {
+    if (e.target === modalEdicao) {
+        modalEdicao.classList.remove("aberto");
+        indiceSendoEditado = null;
+    }
+});
+
+modalSalvar.addEventListener("click", () => {
+    if (indiceSendoEditado === null) return;
+    const registros = carregarHistorico();
+    registros[indiceSendoEditado].estado = estados[parseInt(modalSelect.value)];
+    salvarHistorico(registros);
+    renderizarHistorico();
+    modalEdicao.classList.remove("aberto");
+    indiceSendoEditado = null;
+});
+
 /* INICIALIZAR no centro (Neutro) */
 window.addEventListener("load", () => {
     const rect = slider.getBoundingClientRect();
     const centroX = rect.left + rect.width / 2;
     atualizar(centroX, false);
+    renderizarHistorico();
 });
 </script>
 
